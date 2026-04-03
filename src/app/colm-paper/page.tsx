@@ -1,4 +1,4 @@
-import ProjectPage from "@/components/ProjectPage";
+import BackToWorld from "@/components/BackToWorld";
 
 export const metadata = {
   title: "Negotiation Gym — COLM 2025",
@@ -8,168 +8,153 @@ export const metadata = {
 
 export default function ColmPaperPage() {
   return (
-    <ProjectPage
-      title="Negotiation Gym: Self-Optimizing Agents"
-      description="Published at COLM 2025. An open-source toolkit and API for designing, configuring, and running multi-agent social simulations focused on negotiation and cooperation."
-      techStack={[
-        "Python",
-        "Agentic AI",
-        "AutoGen",
-        "MongoDB",
-        "LLMs",
-        "Multi-Agent Systems",
-      ]}
-    >
-      <div className="space-y-14">
-        <section>
-          <div className="flex gap-4 mb-6">
-            <a 
-              href="https://github.com/chrishokamp/multi-agent-social-simulation" 
-              target="_blank" 
-              rel="noreferrer"
-              className="text-[#4a9eed] hover:text-white transition-colors underline"
-            >
-              View on GitHub
-            </a>
-            <span className="text-[var(--text-muted)]">|</span>
-            <a 
-              href="https://arxiv.org/abs/2510.04368" 
-              target="_blank" 
-              rel="noreferrer"
-              className="text-[#4a9eed] hover:text-white transition-colors underline"
-            >
-              arXiv:2510.04368
-            </a>
-          </div>
-
-          <h2 className="text-2xl font-bold mb-4">The Pitch</h2>
-          <p className="text-[var(--text-muted)] mb-4 leading-relaxed">
-            NegotiationGym allows researchers to train AI to negotiate on their behalf. It provides an open-source playground where Large Language Models (LLMs) don't just execute predefined conversational scripts—they practice, reflect, and actively rewrite their own systemic instructions to secure a better deal in subsequent rounds.
-          </p>
-          <p className="text-[var(--text-muted)] mb-4 leading-relaxed">
-            Instead of executing a static simulation, the agents engage in multiple episodic rounds, mathematically evaluate their utility performance, and utilize a dedicated "coach" module to dynamically rewrite their own underlying system prompts. This creates a highly iterative, self-optimizing approach to complex text-based negotiation tasks without requiring direct human fine-tuning of model weights.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Core Architecture</h2>
-          <p className="text-[var(--text-muted)] mb-6 leading-relaxed">
-            The platform is constructed around a highly modular pipeline designed to separate the semantic reasoning of the models from the rigid rules of the negotiation environment. This separation of concerns allows for complex psychological simulations bounded by strict mathematical limits.
-          </p>
-
-          {/* HTML Figure: Architecture Diagram */}
-          <div className="bg-[#111533]/30 border border-[#4a9eed]/20 p-6 rounded-xl mb-8">
-            <h4 className="text-sm font-bold text-white mb-4 uppercase tracking-widest text-center opacity-80">Figure 1: Simulation Pipeline</h4>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-center text-sm font-mono text-[var(--text-muted)]">
-              <div className="border border-slate-700 p-4 rounded bg-[#0a0e27]/80 w-full md:w-auto">
-                <span className="block text-white mb-1">Configuration</span>
-                JSON Rulebook
-              </div>
-              <div className="text-xl">→</div>
-              <div className="border border-slate-700 p-4 rounded bg-[#0a0e27]/80 w-full md:w-auto">
-                <span className="block text-white mb-1">Boardroom</span>
-                SelectorGroupChat
-              </div>
-              <div className="text-xl">→</div>
-              <div className="border border-slate-700 p-4 rounded bg-[#0a0e27]/80 w-full md:w-auto">
-                <span className="block text-white mb-1">Feedback Loop</span>
-                Utility & Coach
-              </div>
-            </div>
-          </div>
-
-          <ul className="space-y-4 text-[var(--text-muted)] list-disc pl-5">
-            <li>
-              <strong className="text-white">Configuration Interface:</strong> Environment specifications and agent personas are defined strictly via distinct JSON rulebooks. This abstraction allows researchers and non-engineers to architect complex psychological constraints without modifying backend code.
-            </li>
-            <li>
-              <strong className="text-white">SelectorGroupChat:</strong> A central boardroom router powered by AutoGen. It maintains the shared public history and mathematically dictates which agent is granted the floor to speak next, preventing overlapping hallucinations.
-            </li>
-            <li>
-              <strong className="text-white">State Environment:</strong> A lightweight systemic object capturing chronological logs of finished runs. It bundles transcripts and outcomes so agents can objectively study past concessions and failed agreements during the reflection phase.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Optimization Hooks: Self-Rewriting Code</h2>
-          <p className="text-[var(--text-muted)] mb-6 leading-relaxed">
-            Unlike traditional Reinforcement Learning (RL) which updates neural network weights, NegotiationGym relies on semantic updates. The systemic logic exposes two crucial, overridable Python hooks within the Agent class that drive the learning loop after an episodic dialogue ends:
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-[#111533]/50 border border-[#8b5cf6]/20 p-6 rounded-xl shadow-inner">
-              <h3 className="text-lg font-bold text-white mb-3 font-mono">1. compute_utility()</h3>
-              <p className="text-[var(--text-muted)] text-[15px] leading-relaxed">
-                The agent computationally extracts the final agreed price via function calling and calculates a scalar utility score (ranging 0.0 to 1.0). This strictly evaluates the agent's performance against its private minimum constraints and baseline targets (e.g. buyer's budget vs. seller's floor). 
-              </p>
-            </div>
-
-            <div className="bg-[#111533]/50 border border-[#22c55e]/20 p-6 rounded-xl shadow-inner">
-              <h3 className="text-lg font-bold text-white mb-3 font-mono">2. learn_from_feedback()</h3>
-              <p className="text-[var(--text-muted)] text-[15px] leading-relaxed">
-                If the utility score falls below an established expectation curve, the agent consults a separate "AI Coach". The coach reads the recent transcript, critiques strategic blunders (like anchoring too early), and outputs a revised system prompt which permanently replaces the agent's brain for the next episode.
-              </p>
-            </div>
+    <main className="min-h-screen bg-[#11080a] text-[#a08b93] font-mono selection:bg-[#44cc66]/30">
+      <div className="absolute top-8 left-8 z-50">
+        <BackToWorld />
+      </div>
+      <div className="max-w-4xl mx-auto pt-20 pb-20 px-6">
+        
+        {/* Terminal Header */}
+        <div className="border-4 border-[#2d1a22] bg-[#0a0508] p-6 mb-12 shadow-[8px_8px_0px_#000000]">
+          <div className="flex justify-between items-center border-b-2 border-[#2d1a22] pb-4 mb-6">
+            <h1 className="text-xl md:text-3xl font-bold text-[#e5e5e5] uppercase tracking-widest text-shadow drop-shadow-[2px_2px_0px_#4a1c28]">
+              NEGOTIATION_GYM :: COLM_2025
+            </h1>
+            <span className="animate-pulse h-4 w-4 bg-[#44cc66]"></span>
           </div>
           
-          <div className="bg-[#0a0e27] border border-slate-700/50 rounded-lg p-5 font-mono text-sm text-slate-300 overflow-x-auto">
-            <div className="text-slate-500 mb-2">// Example Coach Output generated at Runtime</div>
-            <div className="text-emerald-400 font-bold mb-1">Critique:</div>
-            <div className="mb-3">You revealed your maximum budget in turn 2, destroying your leverage.</div>
-            <div className="text-[#4a9eed] font-bold mb-1">New System Prompt:</div>
-            <div>"You are a strict buyer. NEVER reveal your true budget. Begin by aggressively anchoring the price 40% below the asking rate, and cite fictional competitor prices to justify your stance."</div>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Empirical Case Study: The "No-Deal" Phenomenon</h2>
-          <p className="text-[var(--text-muted)] mb-4 leading-relaxed">
-            To evaluate the efficacy of the reflection loop, we modeled a bilateral trading simulation mimicking a used laptop sale. Initial empirical testing inside NegotiationGym demonstrated a marked improvement in cumulative average utility when agents utilize the reflection hooks, compared to a static baseline that lacks coaching.
+          <p className="text-[#a08b93] text-sm leading-relaxed mb-6">
+            [ABSTRACT] Agentic AI toolkit designed for bilateral trading simulations. Models practice, reflect, and actively rewrite their own system prompts.
           </p>
+          
+          <div className="flex gap-4 text-xs font-bold uppercase tracking-widest">
+            <a href="https://github.com/chrishokamp/multi-agent-social-simulation" target="_blank" rel="noreferrer" className="bg-[#1e3a5f]/40 border border-[#6699cc] text-[#6699cc] px-4 py-2 hover:bg-[#6699cc] hover:text-[#0a0508] transition-none shadow-[2px_2px_0px_#0a0508]">
+              &gt; SRC_OVR_GITHUB
+            </a>
+            <a href="https://arxiv.org/abs/2510.04368" target="_blank" rel="noreferrer" className="bg-[#4a1c28]/40 border border-[#e11d48] text-[#e11d48] px-4 py-2 hover:bg-[#e11d48] hover:text-[#0a0508] transition-none shadow-[2px_2px_0px_#0a0508]">
+              &gt; DOC_OVR_ARXIV
+            </a>
+          </div>
+        </div>
 
-          {/* HTML Figure: Results Table */}
-          <div className="my-8 overflow-hidden rounded-xl border border-slate-700/60 bg-[#111533]/30">
-            <h4 className="text-sm font-bold text-white p-4 border-b border-slate-700/60 uppercase tracking-widest text-center opacity-80 bg-[#0a0e27]/50">
-              Figure 2: Agreement Rates over 20 Episodic Turns
-            </h4>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-[var(--text-muted)]">
-                <thead className="bg-[#111533]/50 text-white font-mono border-b border-slate-700/60">
+        {/* Console Sections */}
+        <div className="space-y-10">
+          
+          <section className="border-l-2 border-[#44cc66] pl-6">
+            <h2 className="text-[#44cc66] text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+              <span className="text-lg">■</span> DIRECTIVE_OVERVIEW
+            </h2>
+            <p className="text-[#e5e5e5] text-sm leading-relaxed mb-4 p-4 bg-[#0a0508] border border-[#2d1a22]">
+              NegotiationGym allows researchers to train AI to negotiate via self-optimization. Instead of executing a static simulation, agents engage in episodic rounds, mathematically evaluate utility performance, and utilize a dedicated "coach" module to dynamically rewrite their underlying prompts.
+            </p>
+          </section>
+
+          <section className="border-l-2 border-[#6699cc] pl-6">
+            <h2 className="text-[#6699cc] text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+              <span className="text-lg">■</span> SYSTEM_ARCHITECTURE
+            </h2>
+            
+            <div className="bg-[#0a0508] border border-[#1e3a5f] p-6 mb-6 text-xs text-center shadow-[4px_4px_0px_#000000]">
+              <div className="text-[#6699cc] font-bold mb-4 uppercase tracking-widest border-b border-[#1e3a5f] pb-2 inline-block">PIPELINE_ROUTE</div>
+              <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-[#e5e5e5]">
+                <div className="border border-[#2d1a22] bg-[#180c12] p-3 w-full md:w-auto uppercase">
+                  [ CFG ] JSON Rulebook
+                </div>
+                <div className="text-[#6699cc]">===&gt;</div>
+                <div className="border border-[#2d1a22] bg-[#180c12] p-3 w-full md:w-auto uppercase">
+                  [ NET ] SelectorChat
+                </div>
+                <div className="text-[#6699cc]">===&gt;</div>
+                <div className="border border-[#1e3a5f] bg-[#1e3a5f]/20 text-[#6699cc] p-3 w-full md:w-auto uppercase font-bold">
+                  [ OPS ] Util & Coach
+                </div>
+              </div>
+            </div>
+
+            <ul className="space-y-3 text-sm text-[#a08b93]">
+              <li className="flex items-start gap-2">
+                <span className="text-[#6699cc] text-xs mt-1">&gt;</span>
+                <span><strong className="text-[#e5e5e5]">CFG_INTERFACE:</strong> Environment specifications defined strictly via JSON, abstracting psychological constraints from backend code.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#6699cc] text-xs mt-1">&gt;</span>
+                <span><strong className="text-[#e5e5e5]">ROUTER_NODE:</strong> Boardroom router (AutoGen) maintaining shared history and mathematically granting speaking floor protocols.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#6699cc] text-xs mt-1">&gt;</span>
+                <span><strong className="text-[#e5e5e5]">STATE_LOG:</strong> Lightweight object capturing chronological run transcripts for agent reflection analysis.</span>
+              </li>
+            </ul>
+          </section>
+
+          <section className="border-l-2 border-[#e11d48] pl-6">
+            <h2 className="text-[#e11d48] text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+              <span className="text-lg">■</span> HOOK_EXECUTION
+            </h2>
+            <p className="text-sm mb-6 leading-relaxed">
+              Self-rewriting logic is exposed via two critical, overridable Python hooks within the agent memory node:
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="bg-[#0a0508] border-2 border-[#4a1c28] p-5 shadow-[4px_4px_0px_#000000]">
+                <h3 className="text-[#e11d48] text-xs font-bold mb-3 uppercase tracking-widest border-b border-[#4a1c28] pb-2">1. compute_utility()</h3>
+                <p className="text-xs text-[#a08b93] leading-relaxed">
+                  Extracts agreed price via function calling and calculates a scalar utility score evaluating performance against private minimums.
+                </p>
+              </div>
+
+              <div className="bg-[#0a0508] border-2 border-[#44cc66]/40 p-5 shadow-[4px_4px_0px_#000000]">
+                <h3 className="text-[#44cc66] text-xs font-bold mb-3 uppercase tracking-widest border-b border-[#44cc66]/30 pb-2">2. learn_from_feedback()</h3>
+                <p className="text-xs text-[#a08b93] leading-relaxed">
+                  Consults "AI Coach" for transcript critique. Rewrites systemic instructions permanently for the next episodic iteration.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="border-l-2 border-[#4a1c28] pl-6">
+            <h2 className="text-[#a08b93] text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+              <span className="text-lg">■</span> EMPIRICAL_DATA
+            </h2>
+            
+            <div className="bg-[#0a0508] border-2 border-[#2d1a22] mt-6 shadow-[4px_4px_0px_#000000] overflow-hidden text-xs">
+              <div className="bg-[#180c12] text-[#44cc66] p-3 font-bold uppercase tracking-widest text-center border-b-2 border-[#2d1a22]">
+                TABLE_01: AGREEMENT_RATES [20 TURNS]
+              </div>
+              <table className="w-full text-left text-[#a08b93]">
+                <thead className="bg-[#2d1a22]/30 text-[#e5e5e5] uppercase">
                   <tr>
-                    <th scope="col" className="px-6 py-4">Simulation Mode</th>
-                    <th scope="col" className="px-6 py-4">Surplus Captured</th>
-                    <th scope="col" className="px-6 py-4">Agreements Reached</th>
-                    <th scope="col" className="px-6 py-4">Lost to "No-Deal"</th>
+                    <th className="px-4 py-3 font-normal border-b border-[#2d1a22]">SIM_MODE</th>
+                    <th className="px-4 py-3 font-normal border-b border-[#2d1a22]">SURPLUS_CAP</th>
+                    <th className="px-4 py-3 font-normal border-b border-[#2d1a22]">AGREEMENTS</th>
+                    <th className="px-4 py-3 font-normal border-b border-[#2d1a22]">NO_DEAL_LOST</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-700/40">
-                  <tr className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-white">Baseline (No Coach)</td>
-                    <td className="px-6 py-4">~35%</td>
-                    <td className="px-6 py-4">3 / 10</td>
-                    <td className="px-6 py-4 text-rose-400 font-bold">70%</td>
+                <tbody className="divide-y divide-[#2d1a22]">
+                  <tr className="hover:bg-[#180c12] transition-none">
+                    <td className="px-4 py-3 text-white">Baseline</td>
+                    <td className="px-4 py-3">~35%</td>
+                    <td className="px-4 py-3">3/10</td>
+                    <td className="px-4 py-3 text-[#e11d48] font-bold">70%</td>
                   </tr>
-                  <tr className="hover:bg-white/5 transition-colors bg-[#8b5cf6]/5">
-                    <td className="px-6 py-4 font-semibold text-purple-300">Optimized (Reflection Active)</td>
-                    <td className="px-6 py-4">~85%</td>
-                    <td className="px-6 py-4">9 / 10</td>
-                    <td className="px-6 py-4 text-emerald-400 font-bold">10%</td>
+                  <tr className="hover:bg-[#180c12] transition-none bg-[#44cc66]/5">
+                    <td className="px-4 py-3 text-[#44cc66]">Optimized</td>
+                    <td className="px-4 py-3">~85%</td>
+                    <td className="px-4 py-3">9/10</td>
+                    <td className="px-4 py-3 text-white font-bold">10%</td>
                   </tr>
                 </tbody>
               </table>
             </div>
-          </div>
 
-          <h3 className="text-xl font-bold mt-8 mb-3">The Asymmetric Flexibility Advantage</h3>
-          <p className="text-[var(--text-muted)] mb-4 leading-relaxed">
-            Furthermore, granular results indicate asymmetric learning curves: Buyer agents computationally exhibited substantially stronger optimization trajectories than Seller agents. When both agents were allowed to learn simultaneously, the Buyer consistently captured a wider margin of the theoretical surplus.
-          </p>
-          <p className="text-[var(--text-muted)] leading-relaxed">
-            This phenomenon occurs because Sellers are mathematically bound strictly by their absolute floor price. Attempting to anchor too aggressively as a seller quickly alienates the buyer and causes abrupt simulation terminations (the "No-Deal"). Buyers, conversely, possess the flexibility to employ diverse low-ball anchoring and psychometric timing tactics to test the seller's floor without immediately risking a fatal breakdown of negotiations. This mathematically highlights the necessity of role-integrated learning strategies in multi-agent networks.
-          </p>
-        </section>
+            <p className="text-sm mt-6 leading-relaxed">
+              <strong className="text-[#e5e5e5] block mb-2 uppercase tracking-widest text-xs">ASYMMETRIC_ADVANTAGE:</strong>
+              Buyer agents computationally exhibited stronger optimization trajectories than Seller agents. Sellers are mathematically bound by their absolute floor price, causing aggressive anchoring to breach limits ("No-Deal"). Buyers possess flexibility to low-ball without immediately risking negotiation breakdown, mathematically highlighting the necessity of role-integrated learning strategies.
+            </p>
+          </section>
+
+        </div>
       </div>
-    </ProjectPage>
+    </main>
   );
 }

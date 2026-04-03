@@ -55,6 +55,11 @@ export class FightingRingScene {
   private readonly deskInteractionRange = 60;
   private deskPrompt: Container | null = null;
 
+  // Board interaction
+  private boardX = 0;
+  private readonly boardInteractionRange = 50;
+  private boardPrompt: Container | null = null;
+
   constructor() {
     this.container = new Container();
     this.roomContainer = new Container();
@@ -69,6 +74,9 @@ export class FightingRingScene {
 
     // Desk to the left of robots
     this.deskX = this.roomLeft + 330;
+
+    // Board between door and desk
+    this.boardX = this.roomLeft + 185;
 
     // Character bounds: past door on left, stop before robots on right
     this.charMinX = this.roomLeft + 15;
@@ -325,6 +333,13 @@ export class FightingRingScene {
     this.deskPrompt.x = this.deskX;
     this.deskPrompt.y = this.floorY - 75;
     this.roomContainer.addChild(this.deskPrompt);
+
+    // --- Board interaction prompt ---
+    this.boardPrompt = this.createPrompt("Press E to run demo");
+    this.boardPrompt.visible = false;
+    this.boardPrompt.x = this.boardX;
+    this.boardPrompt.y = this.floorY - 140;
+    this.roomContainer.addChild(this.boardPrompt);
   }
 
   /** Add a massive, buttery smooth ambient red glow radiating from lava lamps */
@@ -471,6 +486,23 @@ export class FightingRingScene {
       );
       this.roomContainer.addChild(this.dialog.container);
       if (this.deskPrompt) this.deskPrompt.visible = false;
+    }
+
+    // Board interaction check
+    const boardDist = Math.abs(characterX - this.boardX);
+    const nearBoard = boardDist < this.boardInteractionRange;
+
+    if (this.boardPrompt) {
+      this.boardPrompt.visible = nearBoard;
+      if (nearBoard) {
+        this.boardPrompt.y = this.floorY - 140 + Math.sin(Date.now() * 0.004) * 2;
+      }
+    }
+
+    if (nearBoard && isInteracting && this.interactCooldownMs <= 0) {
+      this.interactCooldownMs = 500;
+      this._shouldNavigate = "/colm-paper/demo";
+      return;
     }
   }
 
