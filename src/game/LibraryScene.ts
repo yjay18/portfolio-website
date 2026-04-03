@@ -235,38 +235,46 @@ export class LibraryScene {
     g.rect(this.roomLeft, this.upperPlatformY - 1, this.roomWidth, 1);
     g.fill(0x4a3520);
 
-    // -- A-frame ceiling --
-    const ceilingTop =
-      this.upperPlatformY - this.upperFloorHeight - this.ceilingBeam;
-    const peakX = this.roomLeft + this.roomWidth / 2;
-    const peakY = ceilingTop - 60; // apex of the roof
+    // -- Asymmetric Ceiling (Tower left, Gable right) --
+    const ceilingTop = this.upperPlatformY - this.upperFloorHeight - this.ceilingBeam;
+    const towerWidth = 140;
+    const towerX = this.roomLeft + towerWidth;
+    const peakX = towerX + (this.roomRight - towerX) / 2;
+    const peakY = ceilingTop - 75; // taller apex for right side
 
-    // Fill the triangular ceiling area (stone)
-    g.moveTo(this.roomLeft, ceilingTop);
+    // Tower ceiling section (left side is flat and high)
+    g.rect(this.roomLeft, ceilingTop - 75, towerWidth, 75);
+    g.fill(0x1a1a24);
+    // Flat rafter under tower ceiling
+    g.rect(this.roomLeft, ceilingTop, towerWidth, this.ceilingBeam);
+    g.fill(0x150b05); // very dark wood
+
+    // Triangular area for the gable (right side)
+    g.moveTo(towerX, ceilingTop);
     g.lineTo(peakX, peakY);
     g.lineTo(this.roomRight, ceilingTop);
     g.closePath();
-    g.fill(0x333340);
+    g.fill(0x1a1a24);
 
-    // Left rafter
-    g.moveTo(this.roomLeft, ceilingTop);
+    // Left rafter (gable)
+    g.moveTo(towerX, ceilingTop);
     g.lineTo(peakX, peakY);
     g.lineTo(peakX, peakY + 6);
-    g.lineTo(this.roomLeft, ceilingTop + 6);
+    g.lineTo(towerX, ceilingTop + 6);
     g.closePath();
-    g.fill(0x2d1a0c);
+    g.fill(0x150b05);
 
-    // Right rafter
+    // Right rafter (gable)
     g.moveTo(this.roomRight, ceilingTop);
     g.lineTo(peakX, peakY);
     g.lineTo(peakX, peakY + 6);
     g.lineTo(this.roomRight, ceilingTop + 6);
     g.closePath();
-    g.fill(0x2d1a0c);
+    g.fill(0x150b05);
 
-    // Ceiling beam at top of upper floor
-    g.rect(this.roomLeft, ceilingTop, this.roomWidth, this.ceilingBeam);
-    g.fill(0x2d1a0c);
+    // Ceiling beam under gable
+    g.rect(towerX, ceilingTop, this.roomRight - towerX, this.ceilingBeam);
+    g.fill(0x150b05);
 
     // -- Wall edges --
     g.rect(
@@ -275,7 +283,7 @@ export class LibraryScene {
       3,
       this.floorY - peakY + (VIEWPORT_HEIGHT - this.floorY),
     );
-    g.fill(0x1e1208);
+    g.fill(0x0a0b0e);
 
     g.rect(
       this.roomRight - 3,
@@ -283,12 +291,12 @@ export class LibraryScene {
       3,
       this.floorY - peakY + (VIEWPORT_HEIGHT - this.floorY),
     );
-    g.fill(0x1e1208);
+    g.fill(0x0a0b0e);
 
     this.roomContainer.addChild(g);
   }
 
-  /** Draw a cobblestone pattern with irregular blocks and mortar lines */
+  /** Draw a high detail mossy cobblestone wall */
   private drawCobblestoneWall(
     g: Graphics,
     x: number,
@@ -296,73 +304,80 @@ export class LibraryScene {
     w: number,
     h: number,
   ): void {
-    // Base fill
+    // Very dark mortar back for contrast
     g.rect(x, y, w, h);
-    g.fill(0x3d3d4a);
+    g.fill(0x0e0f14);
 
-    // Seeded random for consistent stone layout
     let seed = 12345;
     const rand = () => {
       seed = (seed * 16807 + 0) % 2147483647;
       return (seed & 0x7fffffff) / 0x7fffffff;
     };
 
-    const stoneColors = [0x4a4a58, 0x424250, 0x3b3b48, 0x464654, 0x363643, 0x505060];
-    const mortarColor = 0x2a2a32;
-
-    // Draw rows of stones
     let rowY = y;
-    let rowIndex = 0;
+    let r = 0;
     while (rowY < y + h) {
-      const rowH = 8 + Math.floor(rand() * 6); // 8-13px tall stones
+      const rowH = 10 + Math.floor(rand() * 4); // 10-13px
       let stoneX = x;
-      // Offset every other row for brick pattern
-      if (rowIndex % 2 === 1) stoneX += 6 + Math.floor(rand() * 10);
+      if (r % 2 === 1) stoneX -= 6 + Math.floor(rand() * 8);
 
+      let c = 0;
       while (stoneX < x + w) {
-        const stoneW = 14 + Math.floor(rand() * 18); // 14-31px wide
-        const actualW = Math.min(stoneW, x + w - stoneX);
-        const color = stoneColors[Math.floor(rand() * stoneColors.length)];
+        const stoneW = 16 + Math.floor(rand() * 12);
+        const drawX = Math.max(x, stoneX);
+        const drawW = Math.min(x + w - drawX, stoneX + stoneW - 1 - drawX + x);
+        const drawY = Math.max(y, rowY);
+        const drawH = Math.min(y + h - drawY, rowY + rowH - 1 - drawY + y);
 
-        // Stone block
-        g.rect(stoneX, rowY, actualW - 1, rowH - 1);
-        g.fill(color);
+        if (drawW > 0 && drawH > 0) {
+          // Dark midnight-blue/grey base color shift
+          let hex = 0x282a36;
+          const shift = (r * 17 + c * 31) % 5;
+          if (shift === 0) hex = 0x323544;
+          else if (shift === 1) hex = 0x1d1f28;
+          else if (shift === 2) hex = 0x242630;
+          else if (shift === 3) hex = 0x2b2e3a;
 
-        // Slight highlight on top edge
-        if (rand() > 0.5) {
-          g.rect(stoneX + 1, rowY, actualW - 3, 1);
-          g.fill((color & 0xfefefe) + 0x060606);
+          // Main block
+          g.rect(drawX, drawY, drawW, drawH);
+          g.fill(hex);
+
+          // Subtle procedural top highlight (now darker)
+          if (drawY === rowY && drawH > 1) {
+            g.rect(drawX, drawY, drawW, 1);
+            g.fill((hex & 0xfefefe) + 0x080808);
+          }
+          // Bottom shadow
+          if (drawY + drawH === rowY + rowH - 1 && drawH > 2) {
+            g.rect(drawX, drawY + drawH - 1, drawW, 1);
+            g.fill((hex & 0xf0f0f0) - 0x101010);
+          }
+
+          // Moss overlay via procedural texture on the stone
+          if ((r * 13 + c * 29) % 4 === 0) {
+            const mossW = Math.min(drawW, 4 + Math.floor(rand() * 5));
+            const mossH = Math.min(drawH, 2 + Math.floor(rand() * 4));
+            g.rect(drawX, drawY, mossW, mossH);
+            g.fill(0x1f3014); // Darker mossy green
+          }
         }
-
-        // Mortar (right edge)
-        g.rect(stoneX + actualW - 1, rowY, 1, rowH);
-        g.fill(mortarColor);
-
-        stoneX += actualW;
+        stoneX += stoneW;
+        c++;
       }
-
-      // Mortar (bottom edge of row)
-      g.rect(x, rowY + rowH - 1, w, 1);
-      g.fill(mortarColor);
-
       rowY += rowH;
-      rowIndex++;
+      r++;
     }
 
-    // Moss patches — small green tints at random mortar intersections
-    seed = 67890;
-    for (let i = 0; i < 15; i++) {
-      const mx = x + Math.floor(rand() * w);
-      const my = y + Math.floor(rand() * h);
-      const mw = 3 + Math.floor(rand() * 6);
-      const mh = 2 + Math.floor(rand() * 3);
-      const mossColor = rand() > 0.5 ? 0x2a4020 : 0x3a5028;
-      g.rect(mx, my, mw, mh);
-      g.fill({ color: mossColor, alpha: 0.5 });
+    // Additional moss patches on the mortar
+    for (let i = 0; i < 40; i++) {
+        const mx = x + Math.floor(rand() * w);
+        const my = y + Math.floor(rand() * h);
+        g.rect(mx, my, 2 + Math.floor(rand() * 4), 2 + Math.floor(rand() * 3));
+        g.fill(0x2a4020);
     }
   }
 
-  /** Draw wood plank pattern */
+  /** Draw antique wood floor pattern */
   private drawWoodFloor(
     g: Graphics,
     x: number,
@@ -370,39 +385,66 @@ export class LibraryScene {
     w: number,
     h: number,
   ): void {
-    // Base fill
+    // Very dark black wood base
     g.rect(x, y, w, h);
-    g.fill(0x3d2815);
+    g.fill(0x080402);
 
-    const plankColors = [0x3d2815, 0x422c16, 0x382410, 0x48301c, 0x34200e];
     let seed = 54321;
     const rand = () => {
       seed = (seed * 16807 + 0) % 2147483647;
       return (seed & 0x7fffffff) / 0x7fffffff;
     };
 
-    // Horizontal planks
     let plankY = y;
+    let r = 0;
     while (plankY < y + h) {
-      const plankH = 5 + Math.floor(rand() * 4); // 5-8px
-      const color = plankColors[Math.floor(rand() * plankColors.length)];
+      const plankH = 6 + Math.floor(rand() * 3); // 6-8px
+      const rowY = plankY;
+      const drawY = Math.max(y, rowY);
+      const drawH = Math.min(y + h - drawY, rowY + plankH - 1 - drawY + y);
 
-      g.rect(x, plankY, w, Math.min(plankH, y + h - plankY));
-      g.fill(color);
+      let plankX = x;
+      if (r % 2 === 1) plankX -= 10 + Math.floor(rand() * 10);
+      
+      let c = 0;
+      while (plankX < x + w) {
+        const plankW = 40 + Math.floor(rand() * 30);
+        const drawX = Math.max(x, plankX);
+        const drawW = Math.min(x + w - drawX, plankX + plankW - 1 - drawX + x);
 
-      // Grain lines
-      for (let gx = x; gx < x + w; gx += 8 + Math.floor(rand() * 12)) {
-        if (rand() > 0.6) {
-          g.rect(gx, plankY + 1, 4 + Math.floor(rand() * 8), 1);
-          g.fill({ color: 0x5a4018, alpha: 0.25 });
+        if (drawW > 0 && drawH > 0) {
+            // Antique dark oak wood colored shifts
+            let color = 0x22130a;
+            const shift = (r * 19 + c * 23) % 4;
+            if (shift === 0) color = 0x2a180d;
+            else if (shift === 1) color = 0x180d06;
+            else if (shift === 2) color = 0x1e1008;
+            else if (shift === 3) color = 0x24140a;
+
+            g.rect(drawX, drawY, drawW, drawH);
+            g.fill(color);
+
+            // Rich wood grain texture inside each plank
+            for(let gx = drawX; gx < drawX + drawW; gx += 3 + Math.floor(rand() * 5)) {
+                if (rand() > 0.3 && drawH > 1) {
+                    const grainY = drawY + 1 + Math.floor(rand() * (drawH - 2));
+                    const grainW = Math.min(drawX + drawW - gx, 4 + Math.floor(rand() * 8));
+                    g.rect(gx, grainY, grainW, 1);
+                    g.fill({ color: 0x0f0703, alpha: 0.5 });
+                }
+            }
+
+            // Subtle top edge sheen
+            if (drawY === rowY && drawH > 1) {
+                g.rect(drawX, drawY, drawW, 1);
+                g.fill({ color: 0xffffff, alpha: 0.02 });
+            }
         }
+        plankX += plankW;
+        c++;
       }
-
-      // Plank gap
-      g.rect(x, plankY + plankH - 1, w, 1);
-      g.fill(0x1e1208);
-
       plankY += plankH;
+      r++;
     }
   }
 
@@ -445,17 +487,35 @@ export class LibraryScene {
     // Arched window in the A-frame peak
     await this.loadAFrameWindow(basePath);
 
+    // Vignette / Shadow Overlay (darkens corners and borders)
+    const overlay = new Graphics();
+    overlay.rect(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+    overlay.fill({ color: 0x000000, alpha: 0.25 });
+    overlay.blendMode = "multiply";
+    this.container.addChild(overlay); // add after room for global darkening
+
     // --- NPC (receptionist/librarian) ---
     await this.loadNpc(basePath);
 
     // --- Glow effects ---
     // Ground floor: lantern on right wall — warm glow from flame
     this.addGlowEffect(this.roomLeft + 485, this.floorY - this.groundFloorHeight + 50, 0xffcc66, 50, "ground");
-    this.addGlowEffect(this.roomLeft + 250, this.floorY - 100, 0x8899bb, 45, "ground"); // moonlight from round window
+    
+    // Moonlight from round window (Fixed position from 250 -> 390 to align with window prop)
+    this.addGlowEffect(this.roomLeft + 390, this.floorY - 95, 0x88bbff, 55, "ground"); 
+    
     // Upper floor: lantern on left wall
     this.addGlowEffect(this.roomLeft + 15, this.upperPlatformY - this.upperFloorHeight + 44, 0xffcc66, 50, "upper");
+    
     // Upper floor: candelabra on far right
     this.addGlowEffect(this.roomLeft + 470, this.upperPlatformY - 55, 0xffcc66, 40, "upper");
+
+    // Ceiling arch window golden glow (from outside)
+    const ceilingTop = this.upperPlatformY - this.upperFloorHeight - this.ceilingBeam;
+    const towerWidth = 140;
+    const towerX = this.roomLeft + towerWidth;
+    const peakX = towerX + (this.roomRight - towerX) / 2;
+    this.addGlowEffect(peakX, ceilingTop - 45, 0xffbb66, 70, "upper");
 
     // CRT glow
     this.addGlowEffect(this.roomLeft + 250, this.upperPlatformY - 50, 0x66ccaa, 35, "upper");
@@ -537,12 +597,15 @@ export class LibraryScene {
       sprite.anchor.set(0.5, 0.5);
       sprite.scale.set(1.0);
 
-      // Position at the center peak of the A-frame
+      // Position at the center peak of the A-frame (now shifted to right)
       const ceilingTop =
         this.upperPlatformY - this.upperFloorHeight - this.ceilingBeam;
-      const peakY = ceilingTop - 60; // must match drawRoom
+      const towerWidth = 140;
+      const towerX = this.roomLeft + towerWidth;
+      const peakX = towerX + (this.roomRight - towerX) / 2;
+      const peakY = ceilingTop - 75; // must match drawRoom
 
-      sprite.x = this.roomLeft + this.roomWidth / 2;
+      sprite.x = peakX;
       sprite.y = peakY + 30; // centered in the triangular area
       this.roomContainer.addChild(sprite);
     } catch {
@@ -587,18 +650,26 @@ export class LibraryScene {
     floor: Floor,
   ): void {
     const glow = new Graphics();
-    // Layered circles for soft diffused falloff
-    const layers = 5;
+    const layers = 35;
+    const maxAlpha = 0.10; // Reduced per-layer maximum alpha
+
+    // Draw from largest (progress 1) to smallest (progress 0)
     for (let i = layers; i >= 1; i--) {
-      const r = radius * (i / layers);
-      const a = 0.20 * (1 - (i - 1) / layers); // soft, fading outward
+      const progress = i / layers;
+      const r = radius * progress;
+      const a = maxAlpha * Math.pow(1 - progress, 1.5);
       glow.circle(0, 0, r);
       glow.fill({ color, alpha: a });
     }
     glow.x = x;
     glow.y = y;
+    
+    // Add additive blending for a more natural light emission
+    glow.blendMode = "add";
+
     this.roomContainer.addChild(glow);
-    this.glowSprites.push({ sprite: glow, baseAlpha: 0.20 });
+    // Restore baseAlpha lower so the assembled solid object scales down gracefully
+    this.glowSprites.push({ sprite: glow, baseAlpha: 0.30 });
   }
 
   private createInteractionPrompts(): void {
