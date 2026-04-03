@@ -123,6 +123,14 @@ export class Character {
     return this.keys["e"] || this.keys["enter"];
   }
 
+  isPressingUp(): boolean {
+    return this.keys["w"] || this.keys["arrowup"];
+  }
+
+  isPressingDown(): boolean {
+    return this.keys["s"] || this.keys["arrowdown"];
+  }
+
   snapTo(x: number) {
     this.x = x;
     this.container.x = x;

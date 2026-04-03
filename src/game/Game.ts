@@ -7,6 +7,7 @@ import {
   getBuildingWithInterior,
 } from "@/data/buildings";
 import { InteriorScene } from "./InteriorScene";
+import { LibraryScene } from "./LibraryScene";
 import { ParallaxScene } from "./ParallaxScene";
 import { Sky } from "./Sky";
 import { Character } from "./Character";
@@ -54,6 +55,7 @@ export class Game {
   private _navigating = false; // prevents input during transition
   private sceneMode: SceneMode = "world";
   private interiorScene: InteriorScene | null = null;
+  private libraryScene: LibraryScene | null = null;
   private elapsed = 0;
   private interactCooldownMs = 0;
   private storeSyncTimer = 0;
@@ -205,7 +207,7 @@ export class Game {
       }, 50);
     }
 
-    // Check if returning to an interior (e.g., back from /contact)
+    // Check if returning to an interior (e.g., back from /contact or /thesis)
     const activeInterior = store.interiorId;
     if (activeInterior && isReturning) {
       const building = getBuildingWithInterior(activeInterior);
@@ -214,18 +216,37 @@ export class Game {
         this.rain.container.visible = false;
         this.app.renderer.background.color = 0x000000;
 
-        this.interiorScene = new InteriorScene(building);
-        await this.interiorScene.loadAssets();
+        let sceneContainer: import("pixi.js").Container;
+        let minX: number;
+        let maxX: number;
+
+        if (activeInterior === "university-library") {
+          this.libraryScene = new LibraryScene();
+          await this.libraryScene.loadAssets();
+          sceneContainer = this.libraryScene.container;
+          minX = this.libraryScene.charMinX;
+          maxX = this.libraryScene.charMaxX;
+        } else {
+          this.interiorScene = new InteriorScene(building);
+          await this.interiorScene.loadAssets();
+          sceneContainer = this.interiorScene.container;
+          minX = this.interiorScene.charMinX;
+          maxX = this.interiorScene.charMaxX;
+        }
 
         if (this._destroyed) return;
 
-        this.app.stage.addChild(this.interiorScene.container);
+        this.app.stage.addChild(sceneContainer);
 
         this.character.container.parent?.removeChild(this.character.container);
-        this.interiorScene.container.addChild(this.character.container);
+        if (this.libraryScene) {
+          this.libraryScene.roomContainer.addChild(this.character.container);
+        } else {
+          sceneContainer.addChild(this.character.container);
+        }
 
-        this.character.snapTo(store.interiorCharX || this.interiorScene.charMinX + 20);
-        this.character.setBounds(this.interiorScene.charMinX, this.interiorScene.charMaxX);
+        this.character.snapTo(store.interiorCharX || minX + 20);
+        this.character.setBounds(minX, maxX);
         this.sceneMode = "interior";
       }
     }
@@ -310,6 +331,70 @@ export class Game {
         this.storeSyncTimer = 0;
         store.setCharacterX(this.character.x);
         store.setCameraX(this.camera.x);
+      }
+
+    } else if (this.sceneMode === "interior" && this.libraryScene) {
+      // --- Library interior ---
+      const isInteracting = !this._navigating && this.character.isInteracting();
+      const isPressingUp = this.character.isPressingUp();
+      const isPressingDown = this.character.isPressingDown();
+
+      const prevFloorY = this.libraryScene.getFloorY();
+
+      this.libraryScene.update(
+        deltaMs,
+        this.character.x,
+        this.character.container.y,
+        isInteracting,
+        isPressingUp,
+        isPressingDown,
+      );
+
+      // Update character bounds if floor changed
+      this.character.setBounds(this.libraryScene.charMinX, this.libraryScene.charMaxX);
+
+      // Snap character Y to current floor
+      const newFloorY = this.libraryScene.getFloorY();
+      if (newFloorY !== prevFloorY) {
+        this.character.container.y = newFloorY + 17;
+        // Snap character X to staircase position on new floor
+        this.character.snapTo(
+          Math.max(this.libraryScene.charMinX,
+            Math.min(this.libraryScene.charMaxX, this.character.x)),
+        );
+      }
+
+      // Check navigation
+      if (this.libraryScene.shouldNavigate && this.navigateFn) {
+        this._navigating = true;
+        const route = this.libraryScene.shouldNavigate;
+        const store = useWorldStore.getState();
+        store.setInteriorCharX(this.character.x);
+        this.transition.fadeOut(400).then(() => {
+          if (!this._destroyed && this.navigateFn) {
+            this.navigateFn(route);
+          }
+        });
+      }
+
+      // Check external URL
+      if (this.libraryScene.shouldOpenExternal) {
+        const url = this.libraryScene.shouldOpenExternal;
+        this.libraryScene.clearOpenExternal();
+        window.open(url, "_blank");
+      }
+
+      // Check exit
+      if (this.libraryScene.shouldExit) {
+        this.exitInterior();
+      }
+
+      // Sync position
+      this.storeSyncTimer += deltaMs;
+      if (dx !== 0 && this.storeSyncTimer > 250) {
+        this.storeSyncTimer = 0;
+        const store = useWorldStore.getState();
+        store.setInteriorCharX(this.character.x);
       }
 
     } else if (this.sceneMode === "interior" && this.interiorScene) {
@@ -420,20 +505,32 @@ export class Game {
 
     this.app.renderer.background.color = 0x000000;
 
-    this.interiorScene = new InteriorScene(building);
-    await this.interiorScene.loadAssets();
+    // Instantiate the right scene type
+    let scene: { container: import("pixi.js").Container; charMinX: number; charMaxX: number; loadAssets(): Promise<void> };
+    if (buildingId === "university-library") {
+      this.libraryScene = new LibraryScene();
+      scene = this.libraryScene;
+    } else {
+      this.interiorScene = new InteriorScene(building);
+      scene = this.interiorScene;
+    }
+    await scene.loadAssets();
 
     if (this._destroyed) return;
 
-    this.app.stage.addChild(this.interiorScene.container);
+    this.app.stage.addChild(scene.container);
 
-    // Reparent character into interior
+    // Reparent character into interior (roomContainer for library so camera pan moves character)
     this.character.container.parent?.removeChild(this.character.container);
-    this.interiorScene.container.addChild(this.character.container);
+    if (this.libraryScene) {
+      this.libraryScene.roomContainer.addChild(this.character.container);
+    } else {
+      scene.container.addChild(this.character.container);
+    }
 
-    const entryX = this.interiorScene.charMinX + 20;
+    const entryX = scene.charMinX + 20;
     this.character.snapTo(entryX);
-    this.character.setBounds(this.interiorScene.charMinX, this.interiorScene.charMaxX);
+    this.character.setBounds(scene.charMinX, scene.charMaxX);
 
     this.sceneMode = "interior";
     store.setInteriorId(buildingId);
@@ -478,6 +575,14 @@ export class Game {
       this.interiorScene.destroy();
       this.interiorScene = null;
     }
+    if (this.libraryScene) {
+      this.app.stage.removeChild(this.libraryScene.container);
+      this.libraryScene.destroy();
+      this.libraryScene = null;
+    }
+
+    // Reset character Y to world ground level
+    this.character.container.y = GROUND_Y + 17;
 
     this.parallaxScene.container.visible = true;
     this.rain.container.visible = true;
@@ -519,6 +624,10 @@ export class Game {
     if (this.interiorScene) {
       this.interiorScene.destroy();
       this.interiorScene = null;
+    }
+    if (this.libraryScene) {
+      this.libraryScene.destroy();
+      this.libraryScene = null;
     }
     this.character?.destroy();
 

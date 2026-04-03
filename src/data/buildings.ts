@@ -74,6 +74,11 @@ export const buildings: BuildingConfig[] = [
     spriteFile: "university-library.png",
     description: "ICU Hypotension Early Warning System thesis",
     yOffset: 20, // 15px * 1.3
+    interior: {
+      roomWidth: 500,
+      roomHeight: 360,
+      props: [], // LibraryScene manages its own props internally
+    },
   },
   {
     id: "fighting-ring",
