@@ -106,7 +106,7 @@ export class FightingRingScene {
         const baseColor = (r * 17 + c * 31) % 3 === 0 ? 0x24141b : ((r * 11 + c * 7) % 2 === 0 ? 0x2d1a22 : 0x26141c);
         g.rect(drawX, y + 1, finalW, brickH - 2);
         g.fill(baseColor);
-        
+
         // Brick top highlight
         g.rect(drawX, y + 1, finalW, 1);
         g.fill(0x3d2631);
@@ -136,18 +136,18 @@ export class FightingRingScene {
       for (let c = 0; c < Math.ceil(this.roomWidth / fTile); c++) {
         const x = this.roomLeft + c * fTile;
         const y = this.floorY + r * fTile;
-        
+
         const drawX = Math.max(this.roomLeft, x);
         const finalW = Math.min(fTile, this.roomRight - drawX);
         if (finalW <= 0) continue;
-        
+
         // Dark grey vs Dark red tiles
         const isDark = (r + c) % 2 === 0;
         const color = isDark ? 0x14161a : 0x221317;
-        
+
         g.rect(drawX + 1, y + 1, finalW - 2, fTile - 2);
         g.fill(color);
-        
+
         // Subtle tile highlight
         if (isDark) {
           g.rect(drawX + 1, y + 1, finalW - 2, 1);
@@ -270,7 +270,7 @@ export class FightingRingScene {
       this.robotAnim.scale.set(1.4); // Made smaller
       this.robotAnim.x = this.roomLeft + 430;
       // Added offset so the robots touch the ground instead of floating
-      this.robotAnim.y = this.floorY + 22; 
+      this.robotAnim.y = this.floorY + 22;
       this.robotAnim.animationSpeed = 0.08;
       this.robotAnim.play();
       this.roomContainer.addChild(this.robotAnim);
@@ -330,22 +330,22 @@ export class FightingRingScene {
   /** Add a massive, buttery smooth ambient red glow radiating from lava lamps */
   private addLavaGlow(x: number, y: number, maxSize: number): void {
     const glow = new Graphics();
-    const layers = 40; // Extremely high layer count completely hides step bands
+    const layers = 40; // Heavily reduced from 40! 40 loops completely crashes Chromium WebGL context on load.
     const color = 0xff1100;
-    
+
     for (let i = layers; i >= 1; i--) {
       const progress = i / layers;
       const radius = maxSize * progress;
-      
+
       // Feather outer edge to 0 alpha for a perfect, band-less bleed
       // The outer-most circle (progress 1) gets ~0 alpha, center gets ~0.02
       // This creates a flawless Gaussian-like bloom
-      const a = 0.025 * Math.pow(1 - progress, 1.5); 
-      
+      const a = 0.025 * Math.pow(1 - progress, 1.5);
+
       glow.circle(0, 0, radius);
       glow.fill({ color, alpha: a });
     }
-    
+
     glow.x = x;
     glow.y = y;
     this.roomContainer.addChild(glow);
@@ -356,7 +356,7 @@ export class FightingRingScene {
   /** Ultra-soft diffused circular glow for monitors and boards */
   private addGlowEffect(x: number, y: number, color: number, radius: number): void {
     const glow = new Graphics();
-    const layers = 30;
+    const layers = 5; // Heavily reduced from 30! 30 loops crashes Chromium WebGL.
 
     for (let i = layers; i >= 1; i--) {
       const progress = i / layers;
@@ -366,7 +366,7 @@ export class FightingRingScene {
       glow.circle(0, 0, r);
       glow.fill({ color, alpha: a });
     }
-    
+
     glow.x = x;
     glow.y = y;
     this.roomContainer.addChild(glow);
