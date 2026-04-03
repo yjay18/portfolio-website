@@ -213,7 +213,7 @@ export class LibraryScene {
 
     // Floor highlight
     g.rect(this.roomLeft, this.floorY, this.roomWidth, 1);
-    g.fill(0x6b4c30);
+    g.fill(0x4a3520);
 
     // -- Upper floor platform --
     this.drawWoodFloor(
@@ -228,12 +228,12 @@ export class LibraryScene {
     for (let i = 0; i < 5; i++) {
       const bx = this.roomLeft + 40 + i * 110;
       g.rect(bx, this.upperPlatformY + this.beamThickness, 6, 12);
-      g.fill(0x3d2510);
+      g.fill(0x2d1a0c);
     }
 
     // Upper floor surface highlight
     g.rect(this.roomLeft, this.upperPlatformY - 1, this.roomWidth, 1);
-    g.fill(0x6b4c30);
+    g.fill(0x4a3520);
 
     // -- A-frame ceiling --
     const ceilingTop =
@@ -246,7 +246,7 @@ export class LibraryScene {
     g.lineTo(peakX, peakY);
     g.lineTo(this.roomRight, ceilingTop);
     g.closePath();
-    g.fill(0x484856);
+    g.fill(0x333340);
 
     // Left rafter
     g.moveTo(this.roomLeft, ceilingTop);
@@ -254,7 +254,7 @@ export class LibraryScene {
     g.lineTo(peakX, peakY + 6);
     g.lineTo(this.roomLeft, ceilingTop + 6);
     g.closePath();
-    g.fill(0x3d2510);
+    g.fill(0x2d1a0c);
 
     // Right rafter
     g.moveTo(this.roomRight, ceilingTop);
@@ -262,11 +262,11 @@ export class LibraryScene {
     g.lineTo(peakX, peakY + 6);
     g.lineTo(this.roomRight, ceilingTop + 6);
     g.closePath();
-    g.fill(0x3d2510);
+    g.fill(0x2d1a0c);
 
     // Ceiling beam at top of upper floor
     g.rect(this.roomLeft, ceilingTop, this.roomWidth, this.ceilingBeam);
-    g.fill(0x3d2510);
+    g.fill(0x2d1a0c);
 
     // -- Wall edges --
     g.rect(
@@ -275,7 +275,7 @@ export class LibraryScene {
       3,
       this.floorY - peakY + (VIEWPORT_HEIGHT - this.floorY),
     );
-    g.fill(0x2a1a0e);
+    g.fill(0x1e1208);
 
     g.rect(
       this.roomRight - 3,
@@ -283,7 +283,7 @@ export class LibraryScene {
       3,
       this.floorY - peakY + (VIEWPORT_HEIGHT - this.floorY),
     );
-    g.fill(0x2a1a0e);
+    g.fill(0x1e1208);
 
     this.roomContainer.addChild(g);
   }
@@ -298,7 +298,7 @@ export class LibraryScene {
   ): void {
     // Base fill
     g.rect(x, y, w, h);
-    g.fill(0x5a5a6a);
+    g.fill(0x3d3d4a);
 
     // Seeded random for consistent stone layout
     let seed = 12345;
@@ -307,8 +307,8 @@ export class LibraryScene {
       return (seed & 0x7fffffff) / 0x7fffffff;
     };
 
-    const stoneColors = [0x6b6b7b, 0x5f5f6f, 0x555564, 0x636373, 0x4d4d5c, 0x717181];
-    const mortarColor = 0x3a3a44;
+    const stoneColors = [0x4a4a58, 0x424250, 0x3b3b48, 0x464654, 0x363643, 0x505060];
+    const mortarColor = 0x2a2a32;
 
     // Draw rows of stones
     let rowY = y;
@@ -331,7 +331,7 @@ export class LibraryScene {
         // Slight highlight on top edge
         if (rand() > 0.5) {
           g.rect(stoneX + 1, rowY, actualW - 3, 1);
-          g.fill((color & 0xfefefe) + 0x0a0a0a);
+          g.fill((color & 0xfefefe) + 0x060606);
         }
 
         // Mortar (right edge)
@@ -356,7 +356,7 @@ export class LibraryScene {
       const my = y + Math.floor(rand() * h);
       const mw = 3 + Math.floor(rand() * 6);
       const mh = 2 + Math.floor(rand() * 3);
-      const mossColor = rand() > 0.5 ? 0x3a5a2a : 0x4d6a3a;
+      const mossColor = rand() > 0.5 ? 0x2a4020 : 0x3a5028;
       g.rect(mx, my, mw, mh);
       g.fill({ color: mossColor, alpha: 0.5 });
     }
@@ -372,9 +372,9 @@ export class LibraryScene {
   ): void {
     // Base fill
     g.rect(x, y, w, h);
-    g.fill(0x5c3a21);
+    g.fill(0x3d2815);
 
-    const plankColors = [0x5c3a21, 0x614020, 0x553618, 0x6b4528, 0x503015];
+    const plankColors = [0x3d2815, 0x422c16, 0x382410, 0x48301c, 0x34200e];
     let seed = 54321;
     const rand = () => {
       seed = (seed * 16807 + 0) % 2147483647;
@@ -394,13 +394,13 @@ export class LibraryScene {
       for (let gx = x; gx < x + w; gx += 8 + Math.floor(rand() * 12)) {
         if (rand() > 0.6) {
           g.rect(gx, plankY + 1, 4 + Math.floor(rand() * 8), 1);
-          g.fill({ color: 0x7a5c1e, alpha: 0.3 });
+          g.fill({ color: 0x5a4018, alpha: 0.25 });
         }
       }
 
       // Plank gap
       g.rect(x, plankY + plankH - 1, w, 1);
-      g.fill(0x2a1a0e);
+      g.fill(0x1e1208);
 
       plankY += plankH;
     }
@@ -425,7 +425,7 @@ export class LibraryScene {
 
     // Ground wall-mounted
     await this.loadWallProp(basePath, "notice-board.png", 445, 40, 0.8, "ground");
-    await this.loadWallProp(basePath, "wall-lantern.png", 480, 20, 0.7, "ground");
+    await this.loadWallProp(basePath, "wall-lantern.png", 485, 20, 0.7, "ground", true);
     await this.loadWallProp(basePath, "round-window.png", 390, 30, 0.9, "ground");
     await this.loadWallProp(basePath, "ivy.png", 55, 0, 0.8, "ground");
 
@@ -440,7 +440,7 @@ export class LibraryScene {
 
     // Upper wall-mounted
     await this.loadWallProp(basePath, "tapestry.png", 150, 10, 0.8, "upper");
-    await this.loadWallProp(basePath, "wall-lantern.png", 410, 20, 0.7, "upper");
+    await this.loadWallProp(basePath, "wall-lantern.png", 15, 14, 0.7, "upper");
 
     // Arched window in the A-frame peak
     await this.loadAFrameWindow(basePath);
@@ -449,15 +449,18 @@ export class LibraryScene {
     await this.loadNpc(basePath);
 
     // --- Glow effects ---
-    this.addGlowEffect(this.roomLeft + 280, this.floorY - 100, 0xffcc66, 30, "ground");
-    this.addGlowEffect(this.roomLeft + 475, this.floorY - 60, 0xffcc66, 20, "ground");
-    this.addGlowEffect(this.roomLeft + 250, this.floorY - 100, 0x8899bb, 35, "ground"); // moonlight
-    this.addGlowEffect(this.roomLeft + 410, this.upperPlatformY - 60, 0xffcc66, 20, "upper");
+    // Ground floor: lantern on right wall — warm glow from flame
+    this.addGlowEffect(this.roomLeft + 485, this.floorY - this.groundFloorHeight + 50, 0xffcc66, 50, "ground");
+    this.addGlowEffect(this.roomLeft + 250, this.floorY - 100, 0x8899bb, 45, "ground"); // moonlight from round window
+    // Upper floor: lantern on left wall
+    this.addGlowEffect(this.roomLeft + 15, this.upperPlatformY - this.upperFloorHeight + 44, 0xffcc66, 50, "upper");
+    // Upper floor: candelabra on far right
+    this.addGlowEffect(this.roomLeft + 470, this.upperPlatformY - 55, 0xffcc66, 40, "upper");
 
     // CRT glow
-    this.addGlowEffect(this.roomLeft + 250, this.upperPlatformY - 50, 0x66ccaa, 25, "upper");
+    this.addGlowEffect(this.roomLeft + 250, this.upperPlatformY - 50, 0x66ccaa, 35, "upper");
     // Laptop glow
-    this.addGlowEffect(this.roomLeft + 355, this.upperPlatformY - 40, 0x88aaff, 20, "upper");
+    this.addGlowEffect(this.roomLeft + 355, this.upperPlatformY - 40, 0x88aaff, 30, "upper");
 
     // --- Interaction prompts ---
     this.createInteractionPrompts();
@@ -505,12 +508,13 @@ export class LibraryScene {
     yFromWallTop: number,
     scale: number,
     floor: Floor,
+    flipX = false,
   ): Promise<void> {
     try {
       const texture = await Assets.load(`${basePath}/${file}`);
       const sprite = new Sprite(texture);
       sprite.anchor.set(0.5, 0);
-      sprite.scale.set(scale);
+      sprite.scale.set(flipX ? -scale : scale, scale);
 
       const wallTop =
         floor === "ground"
@@ -536,10 +540,10 @@ export class LibraryScene {
       // Position at the center peak of the A-frame
       const ceilingTop =
         this.upperPlatformY - this.upperFloorHeight - this.ceilingBeam;
-      const peakY = ceilingTop - 40;
+      const peakY = ceilingTop - 60; // must match drawRoom
 
       sprite.x = this.roomLeft + this.roomWidth / 2;
-      sprite.y = peakY + 20; // centered in the triangular area
+      sprite.y = peakY + 30; // centered in the triangular area
       this.roomContainer.addChild(sprite);
     } catch {
       console.warn("Failed to load A-frame window");
@@ -548,7 +552,7 @@ export class LibraryScene {
 
   private async loadNpc(basePath: string): Promise<void> {
     this.npcContainer = new Container();
-    this.npcX = this.roomLeft + 440;
+    this.npcX = this.roomLeft + 450;
     this.npcContainer.x = this.npcX;
     this.npcContainer.y = this.floorY + 20;
 
@@ -583,12 +587,18 @@ export class LibraryScene {
     floor: Floor,
   ): void {
     const glow = new Graphics();
-    glow.circle(0, 0, radius);
-    glow.fill({ color, alpha: 0.15 });
+    // Layered circles for soft diffused falloff
+    const layers = 5;
+    for (let i = layers; i >= 1; i--) {
+      const r = radius * (i / layers);
+      const a = 0.20 * (1 - (i - 1) / layers); // soft, fading outward
+      glow.circle(0, 0, r);
+      glow.fill({ color, alpha: a });
+    }
     glow.x = x;
     glow.y = y;
     this.roomContainer.addChild(glow);
-    this.glowSprites.push({ sprite: glow, baseAlpha: 0.15 });
+    this.glowSprites.push({ sprite: glow, baseAlpha: 0.20 });
   }
 
   private createInteractionPrompts(): void {

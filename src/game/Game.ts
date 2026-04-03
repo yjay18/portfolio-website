@@ -8,6 +8,7 @@ import {
 } from "@/data/buildings";
 import { InteriorScene } from "./InteriorScene";
 import { LibraryScene } from "./LibraryScene";
+import { FightingRingScene } from "./FightingRingScene";
 import { ParallaxScene } from "./ParallaxScene";
 import { Sky } from "./Sky";
 import { Character } from "./Character";
@@ -56,6 +57,7 @@ export class Game {
   private sceneMode: SceneMode = "world";
   private interiorScene: InteriorScene | null = null;
   private libraryScene: LibraryScene | null = null;
+  private fightingRingScene: FightingRingScene | null = null;
   private elapsed = 0;
   private interactCooldownMs = 0;
   private storeSyncTimer = 0;
@@ -226,6 +228,12 @@ export class Game {
           sceneContainer = this.libraryScene.container;
           minX = this.libraryScene.charMinX;
           maxX = this.libraryScene.charMaxX;
+        } else if (activeInterior === "fighting-ring") {
+          this.fightingRingScene = new FightingRingScene();
+          await this.fightingRingScene.loadAssets();
+          sceneContainer = this.fightingRingScene.container;
+          minX = this.fightingRingScene.charMinX;
+          maxX = this.fightingRingScene.charMaxX;
         } else {
           this.interiorScene = new InteriorScene(building);
           await this.interiorScene.loadAssets();
@@ -397,6 +405,34 @@ export class Game {
         store.setInteriorCharX(this.character.x);
       }
 
+    } else if (this.sceneMode === "interior" && this.fightingRingScene) {
+      // --- Fighting ring interior ---
+      const isInteracting = !this._navigating && this.character.isInteracting();
+      this.fightingRingScene.update(deltaMs, this.character.x, isInteracting);
+
+      if (this.fightingRingScene.shouldNavigate && this.navigateFn) {
+        this._navigating = true;
+        const route = this.fightingRingScene.shouldNavigate;
+        const store = useWorldStore.getState();
+        store.setInteriorCharX(this.character.x);
+        this.transition.fadeOut(400).then(() => {
+          if (!this._destroyed && this.navigateFn) {
+            this.navigateFn(route);
+          }
+        });
+      }
+
+      if (this.fightingRingScene.shouldExit) {
+        this.exitInterior();
+      }
+
+      this.storeSyncTimer += deltaMs;
+      if (dx !== 0 && this.storeSyncTimer > 250) {
+        this.storeSyncTimer = 0;
+        const store = useWorldStore.getState();
+        store.setInteriorCharX(this.character.x);
+      }
+
     } else if (this.sceneMode === "interior" && this.interiorScene) {
       const isInteracting = !this._navigating && this.character.isInteracting();
       this.interiorScene.update(deltaMs, this.character.x, isInteracting);
@@ -510,6 +546,9 @@ export class Game {
     if (buildingId === "university-library") {
       this.libraryScene = new LibraryScene();
       scene = this.libraryScene;
+    } else if (buildingId === "fighting-ring") {
+      this.fightingRingScene = new FightingRingScene();
+      scene = this.fightingRingScene;
     } else {
       this.interiorScene = new InteriorScene(building);
       scene = this.interiorScene;
@@ -580,6 +619,11 @@ export class Game {
       this.libraryScene.destroy();
       this.libraryScene = null;
     }
+    if (this.fightingRingScene) {
+      this.app.stage.removeChild(this.fightingRingScene.container);
+      this.fightingRingScene.destroy();
+      this.fightingRingScene = null;
+    }
 
     // Reset character Y to world ground level
     this.character.container.y = GROUND_Y + 17;
@@ -628,6 +672,10 @@ export class Game {
     if (this.libraryScene) {
       this.libraryScene.destroy();
       this.libraryScene = null;
+    }
+    if (this.fightingRingScene) {
+      this.fightingRingScene.destroy();
+      this.fightingRingScene = null;
     }
     this.character?.destroy();
 
