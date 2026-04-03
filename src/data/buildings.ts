@@ -93,7 +93,7 @@ export const buildings: BuildingConfig[] = [
     description: "COLM: Multi-Agent Social Simulation paper",
     yOffset: 39, // 30px * 1.3
     interior: {
-      roomWidth: 500,
+      roomWidth: 480,
       roomHeight: 200,
       props: [], // FightingRingScene manages its own props internally
     },

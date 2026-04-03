@@ -20,9 +20,9 @@ export class FightingRingScene {
   container: Container;
   roomContainer: Container;
 
-  // Room geometry
-  private readonly roomWidth = 500;
-  private readonly roomHeight = 200;
+  // Room geometry — shop interior scale
+  private readonly roomWidth = 480;
+  private readonly roomHeight = 240;
   readonly roomLeft: number;
   readonly roomRight: number;
   readonly floorY = GROUND_Y;
@@ -68,52 +68,141 @@ export class FightingRingScene {
     this.doorX = this.roomLeft + 30;
 
     // Desk to the left of robots
-    this.deskX = this.roomLeft + 340;
+    this.deskX = this.roomLeft + 330;
 
     // Character bounds: past door on left, stop before robots on right
     this.charMinX = this.roomLeft + 15;
-    this.charMaxX = this.roomLeft + 380;
+    this.charMaxX = this.roomLeft + 370;
 
     this.drawRoom();
   }
 
   private drawRoom(): void {
-    // Just wall edges — the actual room background comes from the tileset sprite
     const g = new Graphics();
     const wallTop = this.floorY - this.roomHeight;
+    const floorH = VIEWPORT_HEIGHT - this.floorY;
 
-    // Left wall edge
-    g.rect(this.roomLeft, wallTop - 6, 3, this.roomHeight + 6 + (VIEWPORT_HEIGHT - this.floorY));
-    g.fill(0x4a4f58);
-    // Right wall edge
-    g.rect(this.roomRight - 3, wallTop - 6, 3, this.roomHeight + 6 + (VIEWPORT_HEIGHT - this.floorY));
-    g.fill(0x4a4f58);
-    // Ceiling beam
-    g.rect(this.roomLeft, wallTop - 6, this.roomWidth, 6);
-    g.fill(0x5a5f68);
+    // ── Back wall — dark brickwork ──
+    g.rect(this.roomLeft, wallTop, this.roomWidth, this.roomHeight);
+    g.fill(0x180c12); // Mortar base color
+
+    const brickW = 32;
+    const brickH = 16;
+    for (let r = 0; r <= Math.ceil(this.roomHeight / brickH); r++) {
+      for (let c = -1; c <= Math.ceil(this.roomWidth / brickW); c++) {
+        // Offset alternate rows
+        let x = this.roomLeft + c * brickW;
+        if (r % 2 === 1) x += brickW / 2;
+        const y = wallTop + r * brickH;
+
+        if (x + brickW < this.roomLeft || x > this.roomRight) continue;
+
+        // Draw individual brick
+        const drawX = Math.max(this.roomLeft, x + 1);
+        const finalW = Math.min(brickW - 2, this.roomRight - drawX);
+        if (finalW <= 0) continue;
+
+        // Subtle variation in brick color (purplish dark reds)
+        const baseColor = (r * 17 + c * 31) % 3 === 0 ? 0x24141b : ((r * 11 + c * 7) % 2 === 0 ? 0x2d1a22 : 0x26141c);
+        g.rect(drawX, y + 1, finalW, brickH - 2);
+        g.fill(baseColor);
+        
+        // Brick top highlight
+        g.rect(drawX, y + 1, finalW, 1);
+        g.fill(0x3d2631);
+        // Brick bottom shadow
+        g.rect(drawX, y + brickH - 2, finalW, 1);
+        g.fill(0x1a0e14);
+      }
+    }
+
+    // ── Baseboard / wall-floor transition ──
+    g.rect(this.roomLeft, this.floorY - 14, this.roomWidth, 14);
+    g.fill(0x120a0e);
+    g.rect(this.roomLeft, this.floorY - 14, this.roomWidth, 2);
+    g.fill(0x2d1a22);
+    // Vertical baseboard ribs
+    for (let c = 0; c <= Math.floor(this.roomWidth / 24); c++) {
+      g.rect(this.roomLeft + c * 24 + 10, this.floorY - 12, 4, 12);
+      g.fill(0x1a0e14);
+    }
+
+    // ── Floor — Checkered dark shop floor ──
+    g.rect(this.roomLeft, this.floorY, this.roomWidth, floorH);
+    g.fill(0x100a0c);
+
+    const fTile = 24;
+    for (let r = 0; r < Math.ceil(floorH / fTile); r++) {
+      for (let c = 0; c < Math.ceil(this.roomWidth / fTile); c++) {
+        const x = this.roomLeft + c * fTile;
+        const y = this.floorY + r * fTile;
+        
+        const drawX = Math.max(this.roomLeft, x);
+        const finalW = Math.min(fTile, this.roomRight - drawX);
+        if (finalW <= 0) continue;
+        
+        // Dark grey vs Dark red tiles
+        const isDark = (r + c) % 2 === 0;
+        const color = isDark ? 0x14161a : 0x221317;
+        
+        g.rect(drawX + 1, y + 1, finalW - 2, fTile - 2);
+        g.fill(color);
+        
+        // Subtle tile highlight
+        if (isDark) {
+          g.rect(drawX + 1, y + 1, finalW - 2, 1);
+          g.fill(0x202428);
+        } else {
+          g.rect(drawX + 1, y + 1, finalW - 2, 1);
+          g.fill(0x2f1b21);
+        }
+      }
+    }
+
+    // Heavy separation floor line
+    g.rect(this.roomLeft, this.floorY, this.roomWidth, 2);
+    g.fill(0x0a0508);
+
+    // ── Ceiling beam ──
+    g.rect(this.roomLeft, wallTop - 12, this.roomWidth, 12);
+    g.fill(0x120a0e);
+    // Ceiling highlight
+    g.rect(this.roomLeft, wallTop - 2, this.roomWidth, 2);
+    g.fill(0x2d1a22);
+
+    // ── Wall edges ──
+    const totalH = this.roomHeight + 12 + floorH;
+    // Left edge
+    g.rect(this.roomLeft, wallTop - 12, 6, totalH);
+    g.fill(0x120a0e);
+    g.rect(this.roomLeft + 6, wallTop - 12, 2, totalH);
+    g.fill(0x2d1a22);
+    // Right edge
+    g.rect(this.roomRight - 6, wallTop - 12, 6, totalH);
+    g.fill(0x120a0e);
+    g.rect(this.roomRight - 8, wallTop - 12, 2, totalH);
+    g.fill(0x2d1a22);
+
+    // ── Corner shadows and top down ambiance ──
+    const corners = new Graphics();
+    corners.rect(this.roomLeft + 8, wallTop, 40, this.roomHeight);
+    corners.fill({ color: 0x000000, alpha: 0.35 });
+    corners.rect(this.roomRight - 48, wallTop, 40, this.roomHeight);
+    corners.fill({ color: 0x000000, alpha: 0.35 });
+
+    // Global room vignette / top down lighting for arena mood
+    corners.rect(this.roomLeft, wallTop, this.roomWidth, 60);
+    corners.fill({ color: 0x000000, alpha: 0.4 });
+    // And red ambient top light
+    corners.rect(this.roomLeft, wallTop + 60, this.roomWidth, 40);
+    corners.fill({ color: 0xff0000, alpha: 0.05 });
 
     this.roomContainer.addChild(g);
+    this.roomContainer.addChild(corners);
   }
 
   async loadAssets(): Promise<void> {
     const basePath = "/assets/interiors/fighting-ring";
-
-    // --- Room background from PixelLab tileset export (736x320) ---
-    try {
-      const bgTex = await Assets.load(`${basePath}/room-bg.png`);
-      const bg = new Sprite(bgTex);
-      // Scale to fit room width
-      const scale = this.roomWidth / 736;
-      bg.scale.set(scale);
-      // The composite's floor line is at ~68% from top (y≈218 of 320)
-      // Position so that line aligns with this.floorY
-      const floorLineInImage = 218;
-      bg.x = this.roomLeft;
-      bg.y = this.floorY - floorLineInImage * scale;
-      this.roomContainer.addChildAt(bg, 0);
-    } catch {
-      console.warn("Failed to load room background");
-    }
 
     // --- Door (left side) ---
     try {
@@ -122,7 +211,7 @@ export class FightingRingScene {
       door.anchor.set(0.5, 1);
       door.scale.set(1.4);
       door.x = this.doorX;
-      door.y = this.floorY;
+      door.y = this.floorY + 8; // fix door position
       this.roomContainer.addChild(door);
     } catch {
       console.warn("Failed to load door sprite");
@@ -133,13 +222,13 @@ export class FightingRingScene {
       const boardTex = await Assets.load(`${basePath}/display-board.png`);
       const board = new Sprite(boardTex);
       board.anchor.set(0.5, 0);
-      board.scale.set(1.3);
-      board.x = this.roomLeft + 170;
-      board.y = this.floorY - this.roomHeight + 20;
+      board.scale.set(1.6); // slightly smaller
+      board.x = this.roomLeft + 185;
+      board.y = this.floorY - 150; // fixed position relative to floor
       this.roomContainer.addChild(board);
 
       // Subtle green glow from the display
-      this.addGlowEffect(this.roomLeft + 170, this.floorY - this.roomHeight + 55, 0x44cc66, 30);
+      this.addGlowEffect(this.roomLeft + 185, this.floorY - 110, 0x44cc66, 40);
     } catch {
       console.warn("Failed to load display board sprite");
     }
@@ -151,7 +240,7 @@ export class FightingRingScene {
       desk.anchor.set(0.5, 1);
       desk.scale.set(1.5);
       desk.x = this.deskX;
-      desk.y = this.floorY;
+      desk.y = this.floorY + 18; // correctly mount desk on the floor
       this.roomContainer.addChild(desk);
 
       // Monitor glow from the desk screens
@@ -178,15 +267,15 @@ export class FightingRingScene {
 
       this.robotAnim = new AnimatedSprite(frames);
       this.robotAnim.anchor.set(0.5, 1);
-      this.robotAnim.scale.set(2.2);
-      this.robotAnim.x = this.roomLeft + 440;
-      this.robotAnim.y = this.floorY;
+      this.robotAnim.scale.set(1.4); // Made smaller
+      this.robotAnim.x = this.roomLeft + 430;
+      // Added offset so the robots touch the ground instead of floating
+      this.robotAnim.y = this.floorY + 22; 
       this.robotAnim.animationSpeed = 0.08;
       this.robotAnim.play();
       this.roomContainer.addChild(this.robotAnim);
 
-      // Ring glow under robots — warm fight arena light
-      this.addGlowEffect(this.roomLeft + 440, this.floorY - 40, 0xff6644, 40);
+      // (No glow under robots per user request)
     } catch {
       console.warn("Failed to load robot fight spritesheet");
     }
@@ -208,7 +297,7 @@ export class FightingRingScene {
       const lamp2 = new Sprite(lampTex);
       lamp2.anchor.set(0.5, 1);
       lamp2.scale.set(1.5);
-      lamp2.x = this.roomLeft + 280;
+      lamp2.x = this.roomLeft + 260;
       lamp2.y = this.floorY + 20; // slightly down for depth
       lamp2.zIndex = 10;
       this.roomContainer.addChild(lamp2);
@@ -216,10 +305,9 @@ export class FightingRingScene {
       // Enable sorting so lamps render in front
       this.roomContainer.sortableChildren = true;
 
-      // Red lava lamp glow effects — warm pulsing red light
-      // Each lamp gets two glow layers: a tight bright core and a wider ambient
-      this.addLavaGlow(this.roomLeft + 110, this.floorY - 20, 18, 35);
-      this.addLavaGlow(this.roomLeft + 280, this.floorY - 20, 18, 35);
+      // Massive, soft red ambient light cast from lamps diffusing across the room
+      this.addLavaGlow(this.roomLeft + 110, this.floorY - 60, 220);
+      this.addLavaGlow(this.roomLeft + 260, this.floorY - 60, 220);
     } catch {
       console.warn("Failed to load lava lamp sprite");
     }
@@ -239,44 +327,50 @@ export class FightingRingScene {
     this.roomContainer.addChild(this.deskPrompt);
   }
 
-  /** Add a lava lamp glow: tight red core + wider ambient spread */
-  private addLavaGlow(x: number, y: number, coreR: number, ambientR: number): void {
-    // Tight bright core
-    const core = new Graphics();
-    core.circle(0, 0, coreR);
-    core.fill({ color: 0xff2200, alpha: 0.18 });
-    core.x = x;
-    core.y = y;
-    this.roomContainer.addChild(core);
-    this.glowSprites.push({ sprite: core, baseAlpha: 0.18, color: 0xff2200 });
-
-    // Wider ambient spread
-    const ambient = new Graphics();
-    ambient.circle(0, 0, ambientR);
-    ambient.fill({ color: 0xff4422, alpha: 0.08 });
-    ambient.x = x;
-    ambient.y = y + 10;
-    this.roomContainer.addChild(ambient);
-    this.glowSprites.push({ sprite: ambient, baseAlpha: 0.08, color: 0xff4422 });
-
-    // Upward light cast on wall behind lamp
-    const wallGlow = new Graphics();
-    wallGlow.ellipse(0, 0, ambientR * 0.8, ambientR * 1.2);
-    wallGlow.fill({ color: 0xff3311, alpha: 0.06 });
-    wallGlow.x = x;
-    wallGlow.y = y - 50;
-    this.roomContainer.addChild(wallGlow);
-    this.glowSprites.push({ sprite: wallGlow, baseAlpha: 0.06, color: 0xff3311 });
-  }
-
-  private addGlowEffect(x: number, y: number, color: number, radius: number): void {
+  /** Add a massive, buttery smooth ambient red glow radiating from lava lamps */
+  private addLavaGlow(x: number, y: number, maxSize: number): void {
     const glow = new Graphics();
-    glow.circle(0, 0, radius);
-    glow.fill({ color, alpha: 0.15 });
+    const layers = 40; // Extremely high layer count completely hides step bands
+    const color = 0xff1100;
+    
+    for (let i = layers; i >= 1; i--) {
+      const progress = i / layers;
+      const radius = maxSize * progress;
+      
+      // Feather outer edge to 0 alpha for a perfect, band-less bleed
+      // The outer-most circle (progress 1) gets ~0 alpha, center gets ~0.02
+      // This creates a flawless Gaussian-like bloom
+      const a = 0.025 * Math.pow(1 - progress, 1.5); 
+      
+      glow.circle(0, 0, radius);
+      glow.fill({ color, alpha: a });
+    }
+    
     glow.x = x;
     glow.y = y;
     this.roomContainer.addChild(glow);
-    this.glowSprites.push({ sprite: glow, baseAlpha: 0.15, color });
+    // BaseAlpha for pulsing needs to reflect a balanced alpha state
+    this.glowSprites.push({ sprite: glow, baseAlpha: 0.6, color });
+  }
+
+  /** Ultra-soft diffused circular glow for monitors and boards */
+  private addGlowEffect(x: number, y: number, color: number, radius: number): void {
+    const glow = new Graphics();
+    const layers = 30;
+
+    for (let i = layers; i >= 1; i--) {
+      const progress = i / layers;
+      const r = radius * progress;
+      // Exponential zero-falloff for the board glows
+      const a = 0.03 * Math.pow(1 - progress, 1.5);
+      glow.circle(0, 0, r);
+      glow.fill({ color, alpha: a });
+    }
+    
+    glow.x = x;
+    glow.y = y;
+    this.roomContainer.addChild(glow);
+    this.glowSprites.push({ sprite: glow, baseAlpha: 0.7, color });
   }
 
   private updateGlows(): void {
@@ -284,7 +378,6 @@ export class FightingRingScene {
     for (const { sprite, baseAlpha, color } of this.glowSprites) {
       // Lava lamps get a more organic, slower pulse
       if (color === 0xff2200 || color === 0xff4422 || color === 0xff3311) {
-        // Organic lava bubble rhythm — two sine waves for irregular pulse
         sprite.alpha = baseAlpha + Math.sin(t * 0.8) * 0.04 + Math.sin(t * 1.7) * 0.02;
       } else {
         sprite.alpha = baseAlpha + Math.sin(t) * 0.05;

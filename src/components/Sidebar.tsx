@@ -56,11 +56,10 @@ export default function Sidebar() {
       {/* Desktop expand button (visible when collapsed) */}
       <button
         onClick={toggleSidebarCollapsed}
-        className={`fixed top-4 left-4 z-50 hidden lg:flex items-center justify-center w-8 h-8 bg-[var(--bg-surface)] rounded border border-gray-700 text-[var(--text-muted)] hover:text-white transition-all duration-300 ${
-          sidebarCollapsed
+        className={`fixed top-4 left-4 z-50 hidden lg:flex items-center justify-center w-8 h-8 bg-[var(--bg-surface)] rounded border border-gray-700 text-[var(--text-muted)] hover:text-white transition-all duration-300 ${sidebarCollapsed
             ? "opacity-100"
             : "opacity-0 pointer-events-none"
-        }`}
+          }`}
         aria-label="Expand navigation"
       >
         <svg
@@ -88,9 +87,8 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <nav
-        className={`fixed top-0 left-0 h-full w-[200px] bg-[var(--bg-deep)]/90 backdrop-blur-sm border-r border-gray-800 z-40 transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } ${sidebarCollapsed ? "lg:-translate-x-full" : "lg:translate-x-0"}`}
+        className={`fixed top-0 left-0 h-full w-[200px] bg-[var(--bg-deep)]/90 backdrop-blur-sm border-r border-gray-800 z-40 transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } ${sidebarCollapsed ? "lg:-translate-x-full" : "lg:translate-x-0"}`}
         role="navigation"
         aria-label="Site navigation"
       >
@@ -145,11 +143,10 @@ export default function Sidebar() {
                           onClick={(e) =>
                             handleBuildingClick(e, b.id, b.route)
                           }
-                          className={`block px-2 py-1 rounded text-sm transition-colors ${
-                            isActive
+                          className={`block px-2 py-1 rounded text-sm transition-colors ${isActive
                               ? "bg-white/10 text-white font-medium"
                               : "text-[var(--text-muted)] hover:text-white hover:bg-white/5"
-                          }`}
+                            }`}
                         >
                           {b.name}
                         </a>
