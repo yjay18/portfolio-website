@@ -145,12 +145,17 @@ export const buildings: BuildingConfig[] = [
     route: "/legal-classifier",
     x: 2900,
     width: 192,
-    height: 224,
+    height: 204,
     doorX: 3020,
     spriteFile: "legal-classifier.png",
     description: "US state law passage probability predictor",
-    yOffset: 114, // 57px padding * 2.0 scale
-    scale: 2.0, // bigger than default — law office sprite is small
+    yOffset: 115, // 61px bottom padding * 1.89 scale; keep the larger facade grounded
+    scale: 1.89, // 40% larger than the 1.35 baseline
+    interior: {
+      roomWidth: 600,
+      roomHeight: 300,
+      props: [], // LegalClassifierScene manages its own props internally
+    },
   },
   // Personal Zone (hi-res sprites 144-192px)
   {

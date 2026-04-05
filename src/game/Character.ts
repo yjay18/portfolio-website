@@ -7,21 +7,23 @@ import {
 } from "pixi.js";
 import { GROUND_Y, WORLD_WIDTH, CHARACTER_SCALE } from "@/data/buildings";
 
-type CharState = "idle" | "walk-left" | "walk-right";
+type Facing = "north" | "south" | "east" | "west";
+type CharState = "idle" | "walk";
 
 export class Character {
   container: Container;
   x: number;
   private state: CharState = "idle";
-  private speed = 4; // slightly faster for the wider world
+  private facing: Facing = "south";
+  private speed = 4; // restored per request
   private minX = 20;
   private maxX = WORLD_WIDTH - 20;
   private keys: Record<string, boolean> = {};
   private onKeyDown: (e: KeyboardEvent) => void;
   private onKeyUp: (e: KeyboardEvent) => void;
 
-  private idleSprite: AnimatedSprite | null = null;
-  private walkSprite: AnimatedSprite | null = null;
+  private idleSprites: Partial<Record<Facing, AnimatedSprite>> = {};
+  private walkSprites: Partial<Record<Facing, AnimatedSprite>> = {};
 
   constructor(spawnX: number) {
     this.container = new Container();
@@ -29,7 +31,6 @@ export class Character {
     this.container.x = spawnX;
     this.container.y = GROUND_Y + 17; // 11px padding * 1.3 scale + ground cover sink
 
-    // Shadow blob (scaled)
     const shadow = new Graphics();
     shadow.ellipse(0, 0, 14, 5).fill({ color: 0x000000, alpha: 0.3 });
     shadow.y = 0;
@@ -47,34 +48,43 @@ export class Character {
 
   async loadSprites() {
     try {
-      const walkFrames: Texture[] = [];
-      for (let i = 0; i < 6; i++) {
-        const tex = await Assets.load(
-          `/assets/character/animations/walk/east/frame_00${i}.png`,
-        );
-        walkFrames.push(tex);
-      }
-      this.walkSprite = new AnimatedSprite(walkFrames);
-      this.walkSprite.anchor.set(0.5, 1);
-      this.walkSprite.scale.set(CHARACTER_SCALE);
-      this.walkSprite.animationSpeed = 0.15;
-      this.walkSprite.play();
-      this.walkSprite.visible = false;
-      this.container.addChild(this.walkSprite);
+      const directions: Facing[] = ["south", "east", "west", "north"];
 
-      const idleFrames: Texture[] = [];
-      for (let i = 0; i < 4; i++) {
-        const tex = await Assets.load(
-          `/assets/character/animations/breathing-idle/south/frame_00${i}.png`,
-        );
-        idleFrames.push(tex);
+      for (const direction of directions) {
+        const walkFrames: Texture[] = [];
+        for (let i = 0; i < 6; i++) {
+          const tex = await Assets.load(
+            `/assets/character/animations/walk/${direction}/frame_00${i}.png`,
+          );
+          walkFrames.push(tex);
+        }
+
+        const walkSprite = new AnimatedSprite(walkFrames);
+        walkSprite.anchor.set(0.5, 1);
+        walkSprite.scale.set(CHARACTER_SCALE);
+        walkSprite.animationSpeed = 0.15;
+        walkSprite.visible = false;
+        this.walkSprites[direction] = walkSprite;
+        this.container.addChild(walkSprite);
+
+        const idleFrames: Texture[] = [];
+        for (let i = 0; i < 4; i++) {
+          const tex = await Assets.load(
+            `/assets/character/animations/breathing-idle/${direction}/frame_00${i}.png`,
+          );
+          idleFrames.push(tex);
+        }
+
+        const idleSprite = new AnimatedSprite(idleFrames);
+        idleSprite.anchor.set(0.5, 1);
+        idleSprite.scale.set(CHARACTER_SCALE);
+        idleSprite.animationSpeed = 0.08;
+        idleSprite.visible = false;
+        this.idleSprites[direction] = idleSprite;
+        this.container.addChild(idleSprite);
       }
-      this.idleSprite = new AnimatedSprite(idleFrames);
-      this.idleSprite.anchor.set(0.5, 1);
-      this.idleSprite.scale.set(CHARACTER_SCALE);
-      this.idleSprite.animationSpeed = 0.08;
-      this.idleSprite.play();
-      this.container.addChild(this.idleSprite);
+
+      this.updateVisibility();
     } catch {
       const placeholder = new Graphics();
       placeholder.rect(-15, -40, 30, 40).fill(0x333333);
@@ -90,32 +100,46 @@ export class Character {
     this.x = Math.max(this.minX, Math.min(this.maxX, this.x + dx));
     this.container.x = this.x;
 
-    const newState: CharState =
-      dx < 0 ? "walk-left" : dx > 0 ? "walk-right" : "idle";
-
-    if (newState !== this.state) {
-      this.state = newState;
-      this.updateVisibility();
+    const prevFacing = this.facing;
+    if (dx < 0) {
+      this.facing = "west";
+    } else if (dx > 0) {
+      this.facing = "east";
     }
 
-    // Mirror for left walking — only flip x, keep y scale
-    if (this.state === "walk-left") {
-      this.container.scale.x = -1;
-    } else {
-      this.container.scale.x = 1;
+    const newState: CharState = dx === 0 ? "idle" : "walk";
+    if (newState !== this.state || prevFacing !== this.facing) {
+      this.state = newState;
+      this.updateVisibility();
     }
 
     return dx;
   }
 
   private updateVisibility() {
-    const walking = this.state !== "idle";
-    if (this.walkSprite) {
-      this.walkSprite.visible = walking;
-      if (walking && !this.walkSprite.playing) this.walkSprite.play();
+    const activeIdle = this.idleSprites[this.facing] ?? null;
+    const activeWalk = this.walkSprites[this.facing] ?? null;
+
+    for (const sprite of Object.values(this.idleSprites)) {
+      if (!sprite) continue;
+      sprite.visible = false;
+      if (sprite.playing) sprite.stop();
     }
-    if (this.idleSprite) {
-      this.idleSprite.visible = !walking;
+
+    for (const sprite of Object.values(this.walkSprites)) {
+      if (!sprite) continue;
+      sprite.visible = false;
+      if (sprite.playing) sprite.stop();
+    }
+
+    if (this.state === "walk" && activeWalk) {
+      activeWalk.visible = true;
+      if (!activeWalk.playing) activeWalk.play();
+    }
+
+    if (this.state === "idle" && activeIdle) {
+      activeIdle.visible = true;
+      if (!activeIdle.playing) activeIdle.play();
     }
   }
 
