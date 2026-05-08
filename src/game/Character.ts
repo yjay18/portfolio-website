@@ -144,7 +144,7 @@ export class Character {
   }
 
   isInteracting(): boolean {
-    return this.keys["e"] || this.keys["enter"];
+    return this.keys["f"] || this.keys["enter"];
   }
 
   isPressingUp(): boolean {

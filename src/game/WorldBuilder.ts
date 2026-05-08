@@ -1,9 +1,8 @@
 import { Assets, Sprite, Texture } from "pixi.js";
 import { Building } from "./Building";
 import {
-  buildings as buildingConfigs,
+  visibleBuildings as buildingConfigs,
   GROUND_Y,
-  BUILDING_SCALE,
 } from "@/data/buildings";
 import { ParallaxScene } from "./ParallaxScene";
 import { type BgBuildingDef } from "./ParallaxLayer";

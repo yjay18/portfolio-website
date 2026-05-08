@@ -1,0 +1,12 @@
+{
+  "transitions": [
+    {
+      "from": "metal floor",
+      "to": "silver metallic wall",
+      "fromId": 1,
+      "toId": 2,
+      "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+      "transitionSize": 0.25
+    }
+  ]
+}

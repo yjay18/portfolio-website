@@ -1,0 +1,509 @@
+{
+  "format": "sparse",
+  "transitions": [
+    {
+      "x": 1,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 2,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 3,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 4,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 5,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 6,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 7,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 8,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 9,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 10,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 11,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 12,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 13,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 14,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 15,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 16,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 17,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 18,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 19,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 20,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 21,
+      "y": 21,
+      "edges": {
+        "south": {
+          "fromTerrain": "silver metallic wall",
+          "toTerrain": "metal floor",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 1,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 2,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 3,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 4,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 5,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 6,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 7,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 8,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 9,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 10,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 11,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 12,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 13,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 14,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 15,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 16,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 17,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 18,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 19,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 20,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    },
+    {
+      "x": 21,
+      "y": 22,
+      "edges": {
+        "north": {
+          "fromTerrain": "metal floor",
+          "toTerrain": "silver metallic wall",
+          "tilesetId": "e1932477-2647-47b3-8bae-81718b50a098",
+          "transitionSize": 0.25
+        }
+      }
+    }
+  ]
+}

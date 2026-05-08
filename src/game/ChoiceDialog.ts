@@ -79,8 +79,8 @@ export class ChoiceDialog {
         this.showChoices();
       }
 
-      // E press during typewriter -> instant reveal
-      if (this.isNewPress("e", keys) || this.isNewPress("enter", keys)) {
+      // F press during typewriter -> instant reveal
+      if (this.isNewPress("f", keys) || this.isNewPress("enter", keys)) {
         this.displayedChars = this.fullText.length;
         this.textObj.text = this.fullText;
         this.textFinished = true;
@@ -101,7 +101,7 @@ export class ChoiceDialog {
       this.updateChoiceHighlight();
     }
 
-    if (this.isNewPress("e", keys) || this.isNewPress("enter", keys)) {
+    if (this.isNewPress("f", keys) || this.isNewPress("enter", keys)) {
       this._chosenYes = this.selectedIndex === 0;
       this.dismissed = true;
     }

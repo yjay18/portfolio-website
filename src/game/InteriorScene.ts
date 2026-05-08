@@ -204,7 +204,7 @@ export class InteriorScene {
         fill: "#ffffff",
         align: "center",
       });
-      const text = new Text({ text: "Press E to talk", style });
+      const text = new Text({ text: "Press F to talk", style });
       text.anchor.set(0.5, 0.5);
       text.y = -5;
       this.promptContainer.addChild(text);
@@ -229,7 +229,7 @@ export class InteriorScene {
         fill: "#ffffff",
         align: "center",
       });
-      const doorText = new Text({ text: "Press E to exit", style: doorStyle });
+      const doorText = new Text({ text: "Press F to exit", style: doorStyle });
       doorText.anchor.set(0.5, 0.5);
       doorText.y = -5;
       this.doorPrompt.addChild(doorText);

@@ -33,7 +33,7 @@ export class InteractionZone {
       fill: "#ffffff",
       align: "center",
     });
-    const text = new Text({ text: "Press E to enter", style });
+    const text = new Text({ text: "Press F to enter", style });
     text.anchor.set(0.5, 0.5);
     text.y = -5;
     this.prompt.addChild(text);

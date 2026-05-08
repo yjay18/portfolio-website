@@ -290,21 +290,21 @@ export class LegalClassifierScene {
       warningLabel: "judge desk",
     });
 
-    this.doorPrompt = this.createPrompt("Press E to exit");
+    this.doorPrompt = this.createPrompt("Press F to exit");
     this.doorPrompt.visible = false;
     this.doorPrompt.x = this.doorX;
     this.doorPrompt.y = this.floorY - 120;
     this.doorPrompt.zIndex = 20;
     this.roomContainer.addChild(this.doorPrompt);
 
-    this.chalkboardPrompt = this.createPrompt("Press E for demo");
+    this.chalkboardPrompt = this.createPrompt("Press F for demo");
     this.chalkboardPrompt.visible = false;
     this.chalkboardPrompt.x = this.chalkboardInteractionX;
     this.chalkboardPrompt.y = this.floorY - 156;
     this.chalkboardPrompt.zIndex = 20;
     this.roomContainer.addChild(this.chalkboardPrompt);
 
-    this.deskPrompt = this.createPrompt("Press E to hear ruling");
+    this.deskPrompt = this.createPrompt("Press F to hear ruling");
     this.deskPrompt.visible = false;
     this.deskPrompt.x = this.deskInteractionX + 24;
     this.deskPrompt.y = this.floorY - 128;

@@ -321,21 +321,21 @@ export class FightingRingScene {
     }
 
     // --- Door exit prompt ---
-    this.doorPrompt = this.createPrompt("Press E to exit");
+    this.doorPrompt = this.createPrompt("Press F to exit");
     this.doorPrompt.visible = false;
     this.doorPrompt.x = this.doorX;
     this.doorPrompt.y = this.floorY - 85;
     this.roomContainer.addChild(this.doorPrompt);
 
     // --- Desk interaction prompt ---
-    this.deskPrompt = this.createPrompt("Press E to read");
+    this.deskPrompt = this.createPrompt("Press F to read");
     this.deskPrompt.visible = false;
     this.deskPrompt.x = this.deskX;
     this.deskPrompt.y = this.floorY - 75;
     this.roomContainer.addChild(this.deskPrompt);
 
     // --- Board interaction prompt ---
-    this.boardPrompt = this.createPrompt("Press E to run demo");
+    this.boardPrompt = this.createPrompt("Press F to run demo");
     this.boardPrompt.visible = false;
     this.boardPrompt.x = this.boardX;
     this.boardPrompt.y = this.floorY - 140;

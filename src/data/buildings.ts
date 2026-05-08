@@ -29,6 +29,7 @@ export interface BuildingConfig {
   name: string;
   zone: Zone;
   route: string;
+  hidden?: boolean;
   x: number;
   width: number;
   height: number;
@@ -73,7 +74,8 @@ export const buildings: BuildingConfig[] = [
     doorX: 320,
     spriteFile: "university-library.png",
     description: "ICU Hypotension Early Warning System thesis",
-    yOffset: 20, // 15px * 1.3
+    yOffset: 30, // 15px * 1.95
+    scale: 1.95, // 50% larger than the 1.3 baseline
     interior: {
       roomWidth: 500,
       roomHeight: 360,
@@ -91,7 +93,8 @@ export const buildings: BuildingConfig[] = [
     doorX: 840,
     spriteFile: "fighting-ring.png",
     description: "COLM: Multi-Agent Social Simulation paper",
-    yOffset: 39, // 30px * 1.3
+    yOffset: 59, // 30px * 1.95
+    scale: 1.95, // 50% larger than the 1.3 baseline
     interior: {
       roomWidth: 480,
       roomHeight: 200,
@@ -117,6 +120,7 @@ export const buildings: BuildingConfig[] = [
     name: "Neural Dungeon Arcade",
     zone: "projects",
     route: "/neural-dungeon",
+    hidden: true,
     x: 2100,
     width: 160,
     height: 192,
@@ -130,6 +134,7 @@ export const buildings: BuildingConfig[] = [
     name: "CopyBot Terminal",
     zone: "projects",
     route: "/copybot",
+    hidden: true,
     x: 2500,
     width: 160,
     height: 192,
@@ -144,13 +149,13 @@ export const buildings: BuildingConfig[] = [
     zone: "projects",
     route: "/legal-classifier",
     x: 2900,
-    width: 192,
-    height: 204,
+    width: 256,
+    height: 256,
     doorX: 3020,
     spriteFile: "legal-classifier.png",
     description: "US state law passage probability predictor",
-    yOffset: 115, // 61px bottom padding * 1.89 scale; keep the larger facade grounded
-    scale: 1.89, // 40% larger than the 1.35 baseline
+    yOffset: 22, // align the side wall bottoms with the street, not the staircase
+    scale: 1.47, // replacement sprite is a full 256px building, not the cropped 192px facade
     interior: {
       roomWidth: 600,
       roomHeight: 300,
@@ -169,13 +174,20 @@ export const buildings: BuildingConfig[] = [
     doorX: 4150,
     spriteFile: "yuuvs-apartment.png",
     description: "About Me — TCD, education, skills, tech stack",
-    yOffset: 7, // 5px * 1.3
+    yOffset: 9, // 5px * 1.69
+    scale: 1.69, // 30% larger than the 1.3 baseline
+    interior: {
+      roomWidth: 1000,
+      roomHeight: 200,
+      props: [], // ApartmentScene manages its own props internally
+    },
   },
   {
     id: "games-tracker",
     name: "Games Tracker Shop",
     zone: "personal",
     route: "/games-tracker",
+    hidden: true,
     x: 4350,
     width: 160,
     height: 160,
@@ -219,6 +231,8 @@ export const buildings: BuildingConfig[] = [
     },
   },
 ];
+
+export const visibleBuildings = buildings.filter((b) => !b.hidden);
 
 export function getBuildingByRoute(
   route: string,

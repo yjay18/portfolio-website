@@ -4,7 +4,7 @@ import {
   VIEWPORT_HEIGHT,
   GROUND_Y,
   INTERACTION_WIDTH,
-  buildings as buildingConfigs,
+  visibleBuildings as buildingConfigs,
 } from "@/data/buildings";
 import { streetObjects } from "./constants";
 

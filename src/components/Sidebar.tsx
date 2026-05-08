@@ -1,21 +1,123 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { buildings, type Zone } from "@/data/buildings";
 import { useWorldStore } from "@/store/worldStore";
 
-const zoneLabels: Record<Zone, { label: string; color: string }> = {
+type SidebarSection = "projects" | "research" | "personal";
+
+interface SidebarChild {
+  label: string;
+  route?: string;
+  buildingId?: string;
+  href?: string;
+}
+
+interface SidebarItem {
+  id: string;
+  label: string;
+  children: SidebarChild[];
+}
+
+const sectionLabels: Record<SidebarSection, { label: string; color: string }> = {
   projects: { label: "Projects", color: "text-green-400" },
-  publications: { label: "Research Papers", color: "text-purple-400" },
-  personal: { label: "About Me", color: "text-blue-400" },
+  research: { label: "Research", color: "text-purple-400" },
+  personal: { label: "Personal", color: "text-blue-400" },
 };
 
-const zoneOrder: Zone[] = ["projects", "publications", "personal"];
+const sectionOrder: SidebarSection[] = ["projects", "research", "personal"];
+
+const sidebarItems: Record<SidebarSection, SidebarItem[]> = {
+  projects: [
+    {
+      id: "legal-classifier",
+      label: "Legal Classifier Project",
+      children: [
+        {
+          label: "Overview",
+          route: "/legal-classifier",
+          buildingId: "legal-classifier",
+        },
+      ],
+    },
+    {
+      id: "lora-surgeon-labs",
+      label: "LoRASurgeon Research",
+      children: [
+        {
+          label: "Overview",
+          route: "/lorasurgeon",
+          buildingId: "lora-surgeon-labs",
+        },
+      ],
+    },
+  ],
+  research: [
+    {
+      id: "fighting-ring",
+      label: "Negotiation Gym",
+      children: [
+        {
+          label: "Paper",
+          route: "/colm-paper",
+          buildingId: "fighting-ring",
+        },
+        { label: "Demo", route: "/colm-paper/demo" },
+        {
+          label: "arXiv",
+          href: "https://arxiv.org/abs/2510.04368",
+        },
+        {
+          label: "Code",
+          href: "https://github.com/chrishokamp/multi-agent-social-simulation",
+        },
+      ],
+    },
+    {
+      id: "university-library",
+      label: "ICU Hypotension Early Warning System",
+      children: [
+        {
+          label: "Thesis",
+          route: "/thesis",
+          buildingId: "university-library",
+        },
+      ],
+    },
+  ],
+  personal: [
+    {
+      id: "yuuvs-apartment",
+      label: "About Me",
+      children: [
+        {
+          label: "Profile",
+          route: "/about",
+          buildingId: "yuuvs-apartment",
+        },
+      ],
+    },
+    {
+      id: "post-office",
+      label: "Contact",
+      children: [
+        {
+          label: "Message",
+          route: "/contact",
+          buildingId: "post-office",
+        },
+      ],
+    },
+  ],
+};
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>(
+    {},
+  );
   const {
     sidebarOpen,
     toggleSidebar,
@@ -25,17 +127,35 @@ export default function Sidebar() {
     requestTeleport,
   } = useWorldStore();
 
-  function handleBuildingClick(
+  function isItemActive(item: SidebarItem) {
+    return item.children.some((child) => child.route === pathname);
+  }
+
+  function isItemExpanded(item: SidebarItem) {
+    return expandedItems[item.id] ?? isItemActive(item);
+  }
+
+  function toggleItem(itemId: string) {
+    setExpandedItems((current) => ({
+      ...current,
+      [itemId]: !current[itemId],
+    }));
+  }
+
+  function handleInternalClick(
     e: React.MouseEvent,
-    buildingId: string,
     route: string,
+    buildingId?: string,
   ) {
-    e.preventDefault();
     setSidebarOpen(false);
 
-    if (pathname === "/") {
+    if (pathname === "/" && buildingId) {
+      e.preventDefault();
       requestTeleport(buildingId);
+    } else if (pathname === route) {
+      e.preventDefault();
     } else {
+      e.preventDefault();
       router.push(route);
     }
   }
@@ -124,35 +244,84 @@ export default function Sidebar() {
             Navigate
           </h2>
 
-          {zoneOrder.map((zone) => (
-            <div key={zone} className="mb-4">
+          {sectionOrder.map((section) => (
+            <div key={section} className="mb-4">
               <h3
-                className={`text-xs font-bold uppercase tracking-wider mb-2 ${zoneLabels[zone].color}`}
+                className={`text-xs font-bold uppercase tracking-wider mb-2 ${sectionLabels[section].color}`}
               >
-                {zoneLabels[zone].label}
+                {sectionLabels[section].label}
               </h3>
               <ul className="space-y-1">
-                {buildings
-                  .filter((b) => b.zone === zone)
-                  .map((b) => {
-                    const isActive = pathname === b.route;
-                    return (
-                      <li key={b.id}>
-                        <a
-                          href={b.route}
-                          onClick={(e) =>
-                            handleBuildingClick(e, b.id, b.route)
-                          }
-                          className={`block px-2 py-1 rounded text-sm transition-colors ${isActive
-                              ? "bg-white/10 text-white font-medium"
-                              : "text-[var(--text-muted)] hover:text-white hover:bg-white/5"
-                            }`}
+                {sidebarItems[section].map((item) => {
+                  const isActive = isItemActive(item);
+                  const isExpanded = isItemExpanded(item);
+
+                  return (
+                    <li key={item.id}>
+                      <button
+                        type="button"
+                        onClick={() => toggleItem(item.id)}
+                        className={`flex w-full items-center justify-between gap-2 rounded px-2 py-1 text-left text-sm transition-colors ${isActive
+                            ? "bg-white/10 text-white font-medium"
+                            : "text-[var(--text-muted)] hover:bg-white/5 hover:text-white"
+                          }`}
+                        aria-expanded={isExpanded}
+                      >
+                        <span>{item.label}</span>
+                        <span
+                          className={`text-xs transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                          aria-hidden="true"
                         >
-                          {b.name}
-                        </a>
-                      </li>
-                    );
-                  })}
+                          {">"}
+                        </span>
+                      </button>
+
+                      {isExpanded && (
+                        <ul className="mt-1 space-y-1 pl-3">
+                          {item.children.map((child) => {
+                            const isChildActive = child.route === pathname;
+                            const className = `block rounded px-2 py-1 text-xs transition-colors ${isChildActive
+                                ? "bg-white/10 text-white font-medium"
+                                : "text-[var(--text-muted)] hover:bg-white/5 hover:text-white"
+                              }`;
+
+                            return (
+                              <li key={`${item.id}-${child.label}`}>
+                                {child.href ? (
+                                  <a
+                                    href={child.href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    onClick={() => setSidebarOpen(false)}
+                                    className={className}
+                                  >
+                                    {child.label}
+                                  </a>
+                                ) : (
+                                  <Link
+                                    href={child.route ?? "#"}
+                                    onClick={(e) => {
+                                      if (child.route) {
+                                        handleInternalClick(
+                                          e,
+                                          child.route,
+                                          child.buildingId,
+                                        );
+                                      }
+                                    }}
+                                    className={className}
+                                  >
+                                    {child.label}
+                                  </Link>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

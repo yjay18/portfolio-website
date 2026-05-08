@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "name": "Arcade-Interior",
+  "exportDate": "2026-04-03T10:35:24.284638Z",
+  "engine": "pixellab-map-editor",
+  "mapConfig": {
+    "tileSize": 32,
+    "dimensions": {
+      "width": 23,
+      "height": 10,
+      "pixelWidth": 736,
+      "pixelHeight": 320
+    },
+    "boundingBox": {
+      "maxX": 22,
+      "maxY": 23,
+      "minX": 0,
+      "minY": 14
+    }
+  },
+  "terrains": [
+    {
+      "id": 1,
+      "name": "metal floor",
+      "color": "#9ca3af",
+      "baseTileId": "30b83f63-b7af-4675-8db7-4fa9e126089f"
+    },
+    {
+      "id": 2,
+      "name": "silver metallic wall",
+      "color": "#9ca3af",
+      "baseTileId": "86c3b1a1-4f79-4bbc-a858-3fa1538052bf"
+    }
+  ],
+  "tilesets": [
+    {
+      "id": "e1932477-2647-47b3-8bae-81718b50a098",
+      "filename": "metal floor-silver metallic wall.png",
+      "lowerTerrain": "metal floor",
+      "upperTerrain": "silver metallic wall",
+      "lowerTerrainId": 1,
+      "upperTerrainId": 2,
+      "transitionSize": 0.25,
+      "transitionDescription": "floor and wall transition",
+      "tileSize": 32,
+      "gridLayout": "4x4",
+      "wangIndexMapping": "standard"
+    }
+  ],
+  "overlays": []
+}

@@ -144,7 +144,7 @@ export class LibraryScene {
         x: this.roomLeft + 410,
         floor: "ground",
         range: 90,
-        promptText: "Press E to talk",
+        promptText: "Press F to talk",
         type: "npc",
         dialogLine: "Here is Yuuv's Thesis...",
         route: "/thesis",
@@ -154,7 +154,7 @@ export class LibraryScene {
         x: this.roomLeft + 250,
         floor: "upper",
         range: 60,
-        promptText: "Press E to view demo",
+        promptText: "Press F to view demo",
         type: "navigate",
         route: "/thesis", // placeholder — will be updated
       },
@@ -163,7 +163,7 @@ export class LibraryScene {
         x: this.roomLeft + 355,
         floor: "upper",
         range: 60,
-        promptText: "Press E to interact",
+        promptText: "Press F to interact",
         type: "choice",
         dialogLine: "Go to project GitHub?",
         externalUrl: "https://github.com/yjay18", // placeholder
@@ -737,7 +737,7 @@ export class LibraryScene {
   }
 
   private createDoorPrompt(): void {
-    this.doorPrompt = this.createPrompt("Press E to exit");
+    this.doorPrompt = this.createPrompt("Press F to exit");
     this.doorPrompt.visible = false;
     this.doorPrompt.x = this.doorX;
     this.doorPrompt.y = this.floorY - 75;

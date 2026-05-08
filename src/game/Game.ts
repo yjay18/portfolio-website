@@ -10,6 +10,7 @@ import { InteriorScene } from "./InteriorScene";
 import { LibraryScene } from "./LibraryScene";
 import { FightingRingScene } from "./FightingRingScene";
 import { LegalClassifierScene } from "./LegalClassifierScene";
+import { ApartmentScene } from "./ApartmentScene";
 import { ParallaxScene } from "./ParallaxScene";
 import { Sky } from "./Sky";
 import { Character } from "./Character";
@@ -60,6 +61,7 @@ export class Game {
   private libraryScene: LibraryScene | null = null;
   private fightingRingScene: FightingRingScene | null = null;
   private legalClassifierScene: LegalClassifierScene | null = null;
+  private apartmentScene: ApartmentScene | null = null;
   private elapsed = 0;
   private interactCooldownMs = 0;
   private storeSyncTimer = 0;
@@ -242,6 +244,12 @@ export class Game {
           sceneContainer = this.legalClassifierScene.container;
           minX = this.legalClassifierScene.charMinX;
           maxX = this.legalClassifierScene.charMaxX;
+        } else if (activeInterior === "yuuvs-apartment") {
+          this.apartmentScene = new ApartmentScene();
+          await this.apartmentScene.loadAssets();
+          sceneContainer = this.apartmentScene.container;
+          minX = this.apartmentScene.charMinX;
+          maxX = this.apartmentScene.charMaxX;
         } else {
           this.interiorScene = new InteriorScene(building);
           await this.interiorScene.loadAssets();
@@ -469,6 +477,34 @@ export class Game {
         store.setInteriorCharX(this.character.x);
       }
 
+    } else if (this.sceneMode === "interior" && this.apartmentScene) {
+      // --- Apartment interior ---
+      const isInteracting = !this._navigating && this.character.isInteracting();
+      this.apartmentScene.update(deltaMs, this.character.x, isInteracting);
+
+      if (this.apartmentScene.shouldNavigate && this.navigateFn) {
+        this._navigating = true;
+        const route = this.apartmentScene.shouldNavigate;
+        const store = useWorldStore.getState();
+        store.setInteriorCharX(this.character.x);
+        this.transition.fadeOut(400).then(() => {
+          if (!this._destroyed && this.navigateFn) {
+            this.navigateFn(route);
+          }
+        });
+      }
+
+      if (this.apartmentScene.shouldExit) {
+        this.exitInterior();
+      }
+
+      this.storeSyncTimer += deltaMs;
+      if (dx !== 0 && this.storeSyncTimer > 250) {
+        this.storeSyncTimer = 0;
+        const store = useWorldStore.getState();
+        store.setInteriorCharX(this.character.x);
+      }
+
     } else if (this.sceneMode === "interior" && this.interiorScene) {
       const isInteracting = !this._navigating && this.character.isInteracting();
       this.interiorScene.update(deltaMs, this.character.x, isInteracting);
@@ -569,12 +605,11 @@ export class Game {
 
     // --- Scene swap ---
     this.parallaxScene.container.scale.set(1);
+    
     this.parallaxScene.container.x = 0;
     this.parallaxScene.container.y = 0;
-
     this.parallaxScene.container.visible = false;
     this.rain.container.visible = false;
-
     this.app.renderer.background.color = 0x000000;
 
     // Instantiate the right scene type
@@ -588,6 +623,9 @@ export class Game {
     } else if (buildingId === "legal-classifier") {
       this.legalClassifierScene = new LegalClassifierScene();
       scene = this.legalClassifierScene;
+    } else if (buildingId === "yuuvs-apartment") {
+      this.apartmentScene = new ApartmentScene();
+      scene = this.apartmentScene;
     } else {
       this.interiorScene = new InteriorScene(building);
       scene = this.interiorScene;
@@ -668,6 +706,11 @@ export class Game {
       this.legalClassifierScene.destroy();
       this.legalClassifierScene = null;
     }
+    if (this.apartmentScene) {
+      this.app.stage.removeChild(this.apartmentScene.container);
+      this.apartmentScene.destroy();
+      this.apartmentScene = null;
+    }
 
     // Reset character Y to world ground level
     this.character.container.y = GROUND_Y + 17;
@@ -724,6 +767,10 @@ export class Game {
     if (this.legalClassifierScene) {
       this.legalClassifierScene.destroy();
       this.legalClassifierScene = null;
+    }
+    if (this.apartmentScene) {
+      this.apartmentScene.destroy();
+      this.apartmentScene = null;
     }
     this.character?.destroy();
 
