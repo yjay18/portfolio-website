@@ -43,7 +43,7 @@ export default function Home() {
       ref={containerRef}
       className="w-full h-screen bg-[var(--bg-deep)]"
       role="img"
-      aria-label="Interactive pixel art portfolio world. Use A/D keys to walk, E to enter buildings. Or use the sidebar to navigate."
+      aria-label="Interactive pixel art portfolio world. Use A/D or Left/Right keys to move, F to interact with buildings. Or use the sidebar to navigate."
     />
   );
 }

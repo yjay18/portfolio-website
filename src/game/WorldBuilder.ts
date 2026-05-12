@@ -1,8 +1,9 @@
-import { Assets, Sprite, Texture } from "pixi.js";
+import { Assets, Container, Graphics, Sprite, Text, TextStyle, Texture } from "pixi.js";
 import { Building } from "./Building";
 import {
   visibleBuildings as buildingConfigs,
   GROUND_Y,
+  SPAWN_X,
 } from "@/data/buildings";
 import { ParallaxScene } from "./ParallaxScene";
 import { type BgBuildingDef } from "./ParallaxLayer";
@@ -56,6 +57,69 @@ export class WorldBuilder {
     await this.placeBuildings(scene);
     await this.placeStreetObjects(scene);
     await this.placeBirds(scene);
+    this.placeSpawnHint(scene);
+  }
+
+  private placeSpawnHint(scene: ParallaxScene) {
+    const hint = new Container();
+    const width = 260;
+    const height = 64;
+
+    hint.x = SPAWN_X;
+    hint.y = GROUND_Y - 250;
+
+    const bg = new Graphics();
+    bg
+      .roundRect(-width / 2, -height / 2, width, height, 6)
+      .fill({ color: 0x06101f, alpha: 0.58 })
+      .stroke({ color: 0x8bd3ff, width: 1, alpha: 0.35 });
+    hint.addChild(bg);
+
+    const accent = new Graphics();
+    accent
+      .rect(-width / 2 + 10, -height / 2 + 8, width - 20, 1)
+      .fill({ color: 0x8bd3ff, alpha: 0.28 });
+    hint.addChild(accent);
+
+    const moveStyle = new TextStyle({
+      fontFamily: "monospace",
+      fontSize: 12,
+      fill: "#e7f6ff",
+      align: "center",
+      dropShadow: {
+        color: "#000000",
+        blur: 3,
+        distance: 1,
+      },
+    });
+    const moveText = new Text({
+      text: "A / D or Left / Right to move",
+      style: moveStyle,
+    });
+    moveText.anchor.set(0.5, 0.5);
+    moveText.y = -10;
+    hint.addChild(moveText);
+
+    const interactStyle = new TextStyle({
+      fontFamily: "monospace",
+      fontSize: 12,
+      fill: "#ffd28a",
+      align: "center",
+      dropShadow: {
+        color: "#000000",
+        blur: 3,
+        distance: 1,
+      },
+    });
+    const interactText = new Text({
+      text: "F to interact",
+      style: interactStyle,
+    });
+    interactText.anchor.set(0.5, 0.5);
+    interactText.y = 14;
+    hint.addChild(interactText);
+
+    scene.main.container.addChild(hint);
   }
 
   private async placeBuildings(scene: ParallaxScene) {

@@ -96,6 +96,10 @@ const sidebarItems: Record<SidebarSection, SidebarItem[]> = {
           route: "/about",
           buildingId: "yuuvs-apartment",
         },
+        {
+          label: "CV",
+          route: "/cv",
+        },
       ],
     },
     {

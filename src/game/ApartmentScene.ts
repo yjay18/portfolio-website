@@ -489,7 +489,7 @@ export class ApartmentScene {
     };
 
     this.doorPrompt = createPrompt("Press F to exit", this.doorX, this.floorY - 90);
-    this.deskPrompt = createPrompt("Press F to interact", this.deskX, this.floorY - 90);
+    this.deskPrompt = createPrompt("Press F for CV", this.deskX, this.floorY - 90);
   }
 
   get shouldNavigate(): string | null { return this._shouldNavigate; }
@@ -534,8 +534,7 @@ export class ApartmentScene {
     }
     if (nearDesk && isInteracting && this.interactCooldownMs <= 0) {
       this.interactCooldownMs = 500;
-      // Navigate to about page or something when interacting with desk
-      this._shouldNavigate = "/about"; 
+      this._shouldNavigate = "/cv";
     }
   }
 
