@@ -153,7 +153,11 @@ export default function Sidebar() {
   ) {
     setSidebarOpen(false);
 
-    if (pathname === "/" && buildingId) {
+    const canUseWorldTeleport =
+      typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 768px)").matches;
+
+    if (pathname === "/" && buildingId && canUseWorldTeleport) {
       e.preventDefault();
       requestTeleport(buildingId);
     } else if (pathname === route) {
