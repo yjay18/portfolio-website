@@ -155,6 +155,19 @@ function MobileFallback() {
           </p>
         </header>
 
+        <section
+          aria-label="Desktop experience note"
+          className="rounded-md border border-[var(--accent-amber)]/30 bg-[var(--accent-amber)]/10 px-4 py-3"
+        >
+          <p className="text-sm font-semibold text-[var(--accent-amber)]">
+            Best experienced on desktop
+          </p>
+          <p className="mt-1 text-sm leading-6 text-[var(--text-muted)]">
+            This site works best, and is fully interactive, on the desktop
+            version. Please use desktop for the full experience.
+          </p>
+        </section>
+
         <nav aria-label="Mobile portfolio navigation" className="space-y-6">
           {mobileSections.map((section) => (
             <section key={section.label}>
